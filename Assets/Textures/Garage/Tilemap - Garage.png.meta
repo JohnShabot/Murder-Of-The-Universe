@@ -1,0 +1,833 @@
+fileFormatVersion: 2
+guid: a744f8a321fca874dac7a9f85fb2a6c4
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 4667573355091704890
+    second: Fade - Corner
+  - first:
+      213: 2258706071714193738
+    second: Black
+  - first:
+      213: -8230557194083662000
+    second: Fade - Vertical
+  - first:
+      213: 3244564077383339347
+    second: Fade - Horizontal
+  - first:
+      213: 1269073633033219765
+    second: Shelves Half Full 1
+  - first:
+      213: -1704829541644444096
+    second: Shelves Full
+  - first:
+      213: 2323165831838080833
+    second: Shelves Half Full 2
+  - first:
+      213: -5285403569760171763
+    second: Floor 1
+  - first:
+      213: 1708618100368988457
+    second: Floor 2
+  - first:
+      213: -3301280879367408535
+    second: Floor 3
+  - first:
+      213: -2790058039250992407
+    second: Floor 4
+  - first:
+      213: 4800093137089185848
+    second: Shelves Half Full 1 - 90
+  - first:
+      213: 3621043893470793705
+    second: Shelves Full - 90
+  - first:
+      213: 6833732042281640182
+    second: Wall
+  - first:
+      213: -819151071990103244
+    second: Wall - Peeled 1
+  - first:
+      213: 2362421989717709414
+    second: Wall - Peeled 2
+  - first:
+      213: -2448361189735271040
+    second: Shelves Half Full 1 - 270
+  - first:
+      213: -3337722071060949891
+    second: Wall Peeled 1 - 90
+  - first:
+      213: 8271997325344535658
+    second: Wall - Peeled 2 - 90
+  - first:
+      213: 2957843094167360539
+    second: Wall Peeled 1 - 180
+  - first:
+      213: -1854944962900992747
+    second: Wall - Peeled 2 - 180
+  - first:
+      213: 1378867918417162304
+    second: Fade TR
+  - first:
+      213: -981691091797577601
+    second: Black
+  - first:
+      213: -5007285904394194233
+    second: Fade TB
+  - first:
+      213: -3901498421487420166
+    second: Fade RL
+  - first:
+      213: -8551195262215735141
+    second: Floor 1
+  - first:
+      213: 8351220690509624148
+    second: Floor 2
+  - first:
+      213: 4586582824348565266
+    second: Floor 3
+  - first:
+      213: -671642637114968625
+    second: Floor 4
+  - first:
+      213: -3109400094483424229
+    second: ShelvesRight - Top
+  - first:
+      213: 5744244341690491683
+    second: Shelves Half1 - TL
+  - first:
+      213: 649461878657293494
+    second: Shelves - Half Full 1
+  - first:
+      213: 7738989524959380845
+    second: Wall 1
+  - first:
+      213: 7151364372636474779
+    second: wall 2
+  - first:
+      213: -956660408156857276
+    second: Wall 3
+  - first:
+      213: -1137842098193481441
+    second: Shelves - 90
+  - first:
+      213: 1037636018243551241
+    second: Shelves Half1 - BL
+  - first:
+      213: 5207089418620915932
+    second: Shelves Half1 - BR
+  - first:
+      213: 8494018492885984942
+    second: Wall 2 - 90
+  - first:
+      213: 6108045304875583991
+    second: Wall 3 - 90
+  - first:
+      213: -1679730018246890219
+    second: shelves - 90
+  - first:
+      213: 4419905996050275187
+    second: Shelves Half2 - TL
+  - first:
+      213: -7934001427840729853
+    second: Shelves Half2 - TR
+  - first:
+      213: 6059209106549073544
+    second: Shelves Full - TL
+  - first:
+      213: 4401784564122229973
+    second: Shelves - Full
+  - first:
+      213: 8624628939773425450
+    second: Wall 2 - 180
+  - first:
+      213: -6765563745068096904
+    second: Wall - 180
+  - first:
+      213: -9178880036961615132
+    second: ShelvesLeft - Bottom
+  - first:
+      213: 6161008590905754231
+    second: Shelves - Half Full 2
+  - first:
+      213: 1131546696877891866
+    second: Shelves Half2 - BR
+  - first:
+      213: -8594445665033299886
+    second: Shelves Full - BL
+  - first:
+      213: 6650055487336634150
+    second: Shelves Full - BR
+  - first:
+      213: 4667573355091704890
+    second: Fade TR
+  - first:
+      213: 2258706071714193738
+    second: Black
+  - first:
+      213: -8230557194083662000
+    second: Fade TB
+  - first:
+      213: 3244564077383339347
+    second: Fade RL
+  - first:
+      213: 1269073633033219765
+    second: FloorTile1
+  - first:
+      213: -1704829541644444096
+    second: FloorTile2
+  - first:
+      213: 2323165831838080833
+    second: FloorTile3
+  - first:
+      213: -671642637114968625
+    second: FloorTile4
+  - first:
+      213: -1226088561937319423
+    second: Shelves Half1 - TR
+  - first:
+      213: 4800093137089185848
+    second: WallTile1
+  - first:
+      213: 3621043893470793705
+    second: WallTile2
+  - first:
+      213: 6833732042281640182
+    second: WallTile3
+  - first:
+      213: -819151071990103244
+    second: ShelvesRight - Bottom
+  - first:
+      213: -3337722071060949891
+    second: WallTile2 - L
+  - first:
+      213: 8271997325344535658
+    second: WallTile3 - R
+  - first:
+      213: 2957843094167360539
+    second: ShelvesLeft - Top
+  - first:
+      213: 5290885961867493747
+    second: Shelves Full - TR
+  - first:
+      213: -435919324790969392
+    second: WallTile2 - U
+  - first:
+      213: 4458411342674274576
+    second: WallTile3 - B
+  - first:
+      213: 8186379872529169350
+    second: Shelves Half2 - BL
+  - first:
+      213: 4667573355091704890
+    second: Fade LRTB
+  - first:
+      213: -981691091797577601
+    second: Black
+  - first:
+      213: -8230557194083662000
+    second: Fade TB
+  - first:
+      213: 3244564077383339347
+    second: Fade LR
+  - first:
+      213: -8551195262215735141
+    second: Floor 1
+  - first:
+      213: 8351220690509624148
+    second: Floor 2
+  - first:
+      213: 4586582824348565266
+    second: Floor 3
+  - first:
+      213: -5285403569760171763
+    second: Floor 4
+  - first:
+      213: 1708618100368988457
+    second: Shelves R
+  - first:
+      213: -3301280879367408535
+    second: Tilemap - Garage_9
+  - first:
+      213: -2790058039250992407
+    second: Shelves F Half 1
+  - first:
+      213: 7738989524959380845
+    second: Wall 1
+  - first:
+      213: 7151364372636474779
+    second: Wall 2 - B
+  - first:
+      213: -956660408156857276
+    second: Wall 3 - T
+  - first:
+      213: -1137842098193481441
+    second: Tilemap - Garage_14
+  - first:
+      213: 2362421989717709414
+    second: Tilemap - Garage_15
+  - first:
+      213: -2448361189735271040
+    second: Tilemap - Garage_16
+  - first:
+      213: 8494018492885984942
+    second: Wall 2 - R
+  - first:
+      213: 6108045304875583991
+    second: Wall 3 - L
+  - first:
+      213: -1679730018246890219
+    second: Tilemap - Garage_19
+  - first:
+      213: -1854944962900992747
+    second: Tilemap - Garage_20
+  - first:
+      213: 6892601847285985628
+    second: Shelves F Half 2
+  - first:
+      213: 4897108606743637977
+    second: Tilemap - Garage_22
+  - first:
+      213: 4401784564122229973
+    second: Shelves F Full
+  - first:
+      213: 8624628939773425450
+    second: Wall 2 - T
+  - first:
+      213: -6765563745068096904
+    second: Wall 3 - B
+  - first:
+      213: 3784527933966184848
+    second: Tilemap - Garage_26
+  - first:
+      213: 6161008590905754231
+    second: Tilemap - Garage_27
+  - first:
+      213: -5317316200818591977
+    second: Tilemap - Garage_28
+  - first:
+      213: 6436537159144031830
+    second: Tilemap - Garage_29
+  - first:
+      213: 7787777537958702776
+    second: Tilemap - Garage_30
+  externalObjects: {}
+  serializedVersion: 11
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: -1
+    aniso: -1
+    mipBias: -100
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  applyGammaDecoding: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Fade LRTB
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 147
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a3cb1519c3d86c040800000000000000
+      internalID: 4667573355091704890
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Fade TB
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 147
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0578b1fd6df27cd80800000000000000
+      internalID: -8230557194083662000
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Fade LR
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 147
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 35d4d6386d1070d20800000000000000
+      internalID: 3244564077383339347
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Black
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 147
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f707d3a37255062f0800000000000000
+      internalID: -981691091797577601
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Floor 1
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 115
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b98b0a6173d045980800000000000000
+      internalID: -8551195262215735141
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Floor 2
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 115
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 453f7baa8fe75e370800000000000000
+      internalID: 8351220690509624148
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Floor 3
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 115
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 21f343a27c0d6af30800000000000000
+      internalID: 4586582824348565266
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Floor 4
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 115
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d090dd1e47976a6b0800000000000000
+      internalID: -5285403569760171763
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Shelves R
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 83
+        width: 32
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 929db411c1b36b710800000000000000
+      internalID: 1708618100368988457
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Shelves F Half 1
+      rect:
+        serializedVersion: 2
+        x: 160
+        y: 83
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9e2c8b3eef8b749d0800000000000000
+      internalID: -2790058039250992407
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Wall 1
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 83
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d654ca358f9666b60800000000000000
+      internalID: 7738989524959380845
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Wall 2 - B
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 83
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b9d9162e100ce3360800000000000000
+      internalID: 7151364372636474779
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Wall 3 - T
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 83
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 44c51296d6249b2f0800000000000000
+      internalID: -956660408156857276
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Wall 2 - R
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 51
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ea66118e0d0d0e570800000000000000
+      internalID: 8494018492885984942
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Wall 3 - L
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 51
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7f90a1dc7d224c450800000000000000
+      internalID: 6108045304875583991
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Shelves F Half 2
+      rect:
+        serializedVersion: 2
+        x: 160
+        y: 19
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c51bead8cd077af50800000000000000
+      internalID: 6892601847285985628
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Shelves F Full
+      rect:
+        serializedVersion: 2
+        x: 224
+        y: 19
+        width: 64
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5dc9d4a4db7461d30800000000000000
+      internalID: 4401784564122229973
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Wall 2 - T
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 19
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a27bfb25356d0b770800000000000000
+      internalID: 8624628939773425450
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Wall 3 - B
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 19
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 87264fd8e93eb12a0800000000000000
+      internalID: -6765563745068096904
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Tilemap - Garage_26
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 19
+        width: 32
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 091f89aca18558430800000000000000
+      internalID: 3784527933966184848
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+  spritePackingTag: 
+  pSDRemoveMatte: 0
+  pSDShowRemoveMatteOption: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
