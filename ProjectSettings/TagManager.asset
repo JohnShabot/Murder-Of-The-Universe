@@ -13,9 +13,9 @@ TagManager:
   - UI
   - 
   - 
-  - bg
   - fg
-  - 
+  - bg
+  - Player
   - 
   - 
   - 
@@ -40,4 +40,16 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: BG
+    uniqueID: 2131280427
+    locked: 0
+  - name: FG
+    uniqueID: 344581279
+    locked: 0
+  - name: Player & Enemies
+    uniqueID: 3214724395
+    locked: 0
+  - name: UI
+    uniqueID: 3591298815
     locked: 0
