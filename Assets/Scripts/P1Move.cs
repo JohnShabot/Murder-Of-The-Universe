@@ -14,6 +14,9 @@ public class P1Move : MonoBehaviour
     int prevDirState;
 
     public float runSpeed = 20.0f;
+    public float bulletSpeed = 50.0f;
+
+    public GameObject bullet;
 
     void Start()
     {
@@ -37,6 +40,8 @@ public class P1Move : MonoBehaviour
             vertical *= moveLimiter;
         }
         body.velocity = new Vector2(horizontal * runSpeed, vertical * runSpeed); //moves the player
+        shoot();
+
     }
     void movement()
     {
@@ -77,7 +82,9 @@ public class P1Move : MonoBehaviour
         if(Input.GetKeyDown("space"))
         {
 
-            bulletDir = new Vector3(Input.GetMouseX(), Input.GetMouseY(), 0);
+            Vector3 bulletDir = Input.mousePosition;
+            Instantiate(bullet, new Vector3(pos.position.x + horizontal * 0.5f, pos.position.y *+ vertical * 0.5f, pos.position.z), Quaternion.identity);
+            bullet.GetComponent<Rigidbody2D>().velocity = new Vector2(bulletDir.x * bulletSpeed, bulletDir.y * bulletSpeed);
         }
     }
 }
