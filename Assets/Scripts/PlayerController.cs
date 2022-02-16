@@ -11,6 +11,9 @@ public class PlayerController : MonoBehaviour
     Vector2 mousePos;
     bool isP1;
 
+    // Item List
+    LinkedList<Item> itemList;
+
     //Player Stats
     float runSpeed = 2.5f;
     float bulletForce = 10f;
@@ -24,6 +27,7 @@ public class PlayerController : MonoBehaviour
     {
         body = GetComponent<Rigidbody2D>();
         cam = Camera.FindObjectOfType<Camera>();
+        itemList = new LinkedList<Item>();
     }
 
     void Update()
@@ -64,6 +68,14 @@ public class PlayerController : MonoBehaviour
         if(HP<= 0)
         {
             Debug.Log("P1 Died");
+        }
+    }
+    void OnTriggerEnter2D(Collider2D c)
+    {
+        if (c.gameObject.tag == "Item")
+        {
+            itemList.AddLast(c.gameObject.GetComponent<ItemPickup>().item);
+            GameObject.Destroy(c.gameObject);
         }
     }
 }
