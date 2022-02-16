@@ -3577,8 +3577,8 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!68 &1149047109
-EdgeCollider2D:
+--- !u!60 &1149047109
+PolygonCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -3591,17 +3591,36 @@ EdgeCollider2D:
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
-  m_EdgeRadius: 0
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
   m_Points:
-  - {x: 7.667987, y: 3.1813495}
-  - {x: 7.6453476, y: -3.848053}
-  - {x: -6.6499977, y: -3.8113117}
-  - {x: -6.655056, y: 3.1891656}
-  - {x: -0.98187876, y: 3.2270956}
-  - {x: -0.9990225, y: 3.7006574}
-  - {x: 0.96946335, y: 3.7001128}
-  - {x: 0.9852543, y: 3.1784337}
-  - {x: 7.709359, y: 3.2642248}
+    m_Paths:
+    - - {x: -0.98, y: 3.2}
+      - {x: -0.98, y: 4}
+      - {x: 0.97, y: 4}
+      - {x: 0.97, y: 3.2}
+      - {x: 7.68, y: 3.2}
+      - {x: 7.68, y: -3.84}
+      - {x: -7, y: -3.84}
+      - {x: -7, y: -0.9}
+      - {x: -7.6, y: -0.9}
+      - {x: -7.6, y: 0.94}
+      - {x: -7, y: 0.94}
+      - {x: -7, y: 3.15}
+      - {x: -8.88, y: -4.15}
+      - {x: 8.2, y: -4.15}
+      - {x: 8.2, y: 5}
+      - {x: -8.88, y: 5}
+      - {x: -8.88, y: -4.15}
+      - {x: -7, y: 3.17}
+      - {x: -6.68, y: 3.17}
 --- !u!4 &1149047110
 Transform:
   m_ObjectHideFlags: 0
