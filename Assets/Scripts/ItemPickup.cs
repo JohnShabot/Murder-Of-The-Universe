@@ -5,10 +5,10 @@ using UnityEngine;
 public class ItemPickup : MonoBehaviour
 {
     //Item Properties
-
-    Item item;
+    public float stupid;
+    public RegularItem item = new RegularItem();
     
-    public Item GetItem()
+    public RegularItem GetItem()
     {
         return item;
     }

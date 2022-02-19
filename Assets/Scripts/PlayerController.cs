@@ -15,9 +15,7 @@ public class PlayerController : MonoBehaviour
     LinkedList<Item> itemList;
 
     //Player Stats
-    float runSpeed = 2.5f;
-    float bulletForce = 10f;
-    float HP = 100f;
+    public float[] PStats = new float[5];
 
     //Scene Dependant Objects
     public Transform firePoint;
@@ -39,7 +37,7 @@ public class PlayerController : MonoBehaviour
     private void FixedUpdate()
     {
 
-        body.MovePosition(body.position + position * runSpeed * Time.fixedDeltaTime); //moves the player
+        body.MovePosition(body.position + position * PStats[2] * Time.fixedDeltaTime); //moves the player
         Vector2 lookDir = mousePos - body.position;
         float angle = Mathf.Atan2(lookDir.y, lookDir.x) * Mathf.Rad2Deg - 90f;
         body.rotation = angle;
@@ -57,25 +55,33 @@ public class PlayerController : MonoBehaviour
             GameObject bull = Instantiate(bullet, firePoint.position, firePoint.rotation);
             Rigidbody2D bullbody = bull.GetComponent<Rigidbody2D>();
             bull.GetComponent<Bullet>().SetCameFrom(gameObject);
-            bullbody.AddForce(firePoint.up * bulletForce, ForceMode2D.Impulse);
+            bull.GetComponent<Bullet>().setDMG(PStats[1]);
+            bullbody.AddForce(firePoint.up * PStats[3], ForceMode2D.Impulse);
         }
         mousePos = cam.ScreenToWorldPoint(Input.mousePosition);
     }
     public void damage(float dmg)
     {
-        HP -= dmg;
-        Debug.Log("Took Damage: " + dmg);
-        if(HP<= 0)
+        PStats[0] -= dmg;
+        Debug.Log("P1 Took Damage: " + dmg);
+        if(PStats[0]<= 0)
         {
             Debug.Log("P1 Died");
         }
     }
     void OnTriggerEnter2D(Collider2D c)
     {
+        Debug.Log("triggered");
         if (c.gameObject.tag == "Item")
         {
-            itemList.AddLast(c.gameObject.GetComponent<ItemPickup>().item);
+            Item it = c.gameObject.GetComponent<ItemPickup>().GetItem();
+            Debug.Log("Gathered New Item");
+            itemList.AddLast(it);
             GameObject.Destroy(c.gameObject);
+            for (int i = 0; i < 5; i++)
+            {
+                this.PStats[i] += it.getStatChange()[i];
+            }
         }
     }
 }

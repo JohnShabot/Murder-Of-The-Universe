@@ -22,7 +22,7 @@ public class EnemyController : MonoBehaviour
     private float Wait;
     public float StartWait = 500f;
     int InvFrame = 0;
-
+    bool firsthit = false;
     public Transform[] MoveSpots;
 
     private int randomSpots;
@@ -33,9 +33,13 @@ public class EnemyController : MonoBehaviour
         Wait = StartWait;
         randomSpots = Random.Range(0, MoveSpots.Length);
     }
-    void Update()
+    private void FixedUpdate()
     {
         InvFrame++;
+    }
+    void Update()
+    {
+        
         Distance = Vector2.Distance(transform.position, GameObject.FindWithTag("Player").transform.position);
 
         if (Distance < Range)
@@ -72,10 +76,28 @@ public class EnemyController : MonoBehaviour
     }
     void OnCollisionEnter2D(Collision2D collision)
     {
-        Debug.Log("Started colliding");
-        if (collision.collider.tag == "Player" && InvFrame >= 500)
+        if (!firsthit)
         {
-            Debug.Log("With Player");
+            firsthit = true;
+            InvFrame = 100;
+        }
+
+        if (collision.collider.tag == "Player" && InvFrame >= 100)
+        {
+            GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().damage(attack);
+            InvFrame = 0;
+        }
+    }
+    void OnCollisionStay2D(Collision2D collision)
+    {
+
+        if (!firsthit)
+        {
+            firsthit = true;
+            InvFrame = 100;
+        }
+        if (collision.collider.tag == "Player" && InvFrame >= 100)
+        {
             GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().damage(attack);
             InvFrame = 0;
         }

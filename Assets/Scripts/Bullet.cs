@@ -7,6 +7,10 @@ public class Bullet : MonoBehaviour
     float dmg=10f;
     GameObject cameFrom;
 
+    public void setDMG(float dmg)
+    {
+        this.dmg = dmg;
+    }
     private void OnTriggerEnter2D(Collider2D col)
     {
         if (col.gameObject.Equals(cameFrom))
