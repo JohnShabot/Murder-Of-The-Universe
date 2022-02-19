@@ -67,11 +67,11 @@ public class PlayerController : MonoBehaviour
         if(PStats[0]<= 0)
         {
             Debug.Log("P1 Died");
+            Destroy(this.gameObject);
         }
     }
     void OnTriggerEnter2D(Collider2D c)
     {
-        Debug.Log("triggered");
         if (c.gameObject.tag == "Item")
         {
             Item it = c.gameObject.GetComponent<ItemPickup>().GetItem();
