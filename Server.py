@@ -12,31 +12,33 @@ def start_server():
     s.listen()
     c, c_address = s.accept()
     while True:
-        data = c.recv(1024).decode().split()
-        if data[0] == 'LOGIN':
-            print(data)
-            c.send("Accepted".encode())
-        if data[0] == 'HOST':
-            print(data)
-            try:
-                start_host(c_address, data[1], data[2])
+        data = c.recv(1024).decode()
+        if data != "":
+            data = data.split()
+            if data[0] == 'LOGIN':
+                print(data)
                 c.send("Accepted".encode())
-            except:
-                c.send("An Error Occurred".encode())
-        if data[0] == 'REFRESH':
-            print(data)
-            # try:
-            c.send("Accepted".encode())
-            send_active_servers(c)
-            # except:
-               # c.send("An Error Occurred".encode())
+            if data[0] == 'HOST':
+                print(data)
+                try:
+                    start_host(c_address, data[1], data[2])
+                    c.send("Accepted".encode())
+                except:
+                    c.send("An Error Occurred".encode())
+            if data[0] == 'REFRESH':
+                print(data)
+                try:
+                    c.send("Accepted".encode())
+                    send_active_servers(c)
+                except:
+                   c.send("An Error Occurred".encode())
 
 
 def start_host(c_address, name, password):
     global host_list
     print('entered def')
-    host_list[name] = [name, password, False, c_address]
-    print(name + " opened a new room: " + str(host_list[name]))
+    host_list[name] = [password, False, c_address]
+    print("a player opened a new room: " + str(host_list[name]))
     for key in host_list.keys():
         print(key + "'s room: " + str(host_list[key]))
 
@@ -45,7 +47,8 @@ def send_active_servers(c):
     global host_list, s
     str_send = ''
     for key in host_list:
-        str_send += str(host_list[key]) + '\n'
+        if not host_list[key][1] and key != "":
+            str_send += str(key) + '\n'
 
     c.send(str_send.encode())
 

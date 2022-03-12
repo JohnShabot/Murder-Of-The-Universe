@@ -34,7 +34,7 @@ public class ServerManager : MonoBehaviour
         string data = Encoding.ASCII.GetString(buffer); // Turn the data into a string
         Debug.Log(data);
     }
-    public void RefreshList()
+    public string RefreshList()
     {
         NetworkStream stream = M.GetStream();
         byte[] sendData = Encoding.ASCII.GetBytes("REFRESH"); // Turns data to bytes
@@ -46,5 +46,6 @@ public class ServerManager : MonoBehaviour
         stream.Read(buffer, 0, 1024); // Read the data
         data = Encoding.ASCII.GetString(buffer); // Turn the data into a string
         Debug.Log(data);
+        return data;
     }
 }
