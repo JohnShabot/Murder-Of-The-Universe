@@ -52,18 +52,21 @@ public class UIManager : MonoBehaviour
     public void RefreshRooms()
     {
         int i = 0;
-        while (roomLabels.ToArray().GetLength() > 0)
+        if(roomLabels.ToArray().Length > 0)
         {
-            Destroy(roomLabels.ToArray()[i]);
-            i++;
+            while (i < roomLabels.ToArray().Length)
+            {
+                Destroy(roomLabels.ToArray()[i]);
+                i++;
+            }
         }
         string roomsStr = gameObject.GetComponent<ServerManager>().RefreshList();
-        string[] roomsLst = roomsStr.Split('\n');
+        string[] roomsLst = roomsStr.Split('#');
         roomLabels = new List<GameObject>();
         int topY = 800;
         foreach (string room in roomsLst)
         {
-            if(room != "")
+            if(!room.StartsWith("end"))
             {
                 Debug.Log(room);
                 GameObject RoomLabel = Instantiate(LabelTemplate, new Vector3(385, topY, 0), new Quaternion(0,0,0,1), RoomsSection.transform);
@@ -72,5 +75,10 @@ public class UIManager : MonoBehaviour
                 roomLabels.Add(RoomLabel);
             }
         }
+    }
+
+    public void ConnectToRoom()
+    {
+        gameObject.GetComponent<ServerManager>().ConnectToHost();
     }
 }

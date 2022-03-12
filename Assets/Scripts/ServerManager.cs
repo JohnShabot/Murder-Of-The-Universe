@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Net.Sockets;
 using System.Text;
+using System;
 
 public class ServerManager : MonoBehaviour
 {
@@ -26,7 +27,7 @@ public class ServerManager : MonoBehaviour
     }
     public void Host(string roomName, string pass)
     {
-        byte[] sendData = Encoding.ASCII.GetBytes("HOST " + roomName + " " + pass); // Turns data to bytes
+        byte[] sendData = Encoding.ASCII.GetBytes("HOST|" + roomName + "#" + Hash128.Compute(pass).ToString()); // Turns data to bytes
         NetworkStream stream = M.GetStream();
         stream.Write(sendData, 0, sendData.Length); // Sends the data
         byte[] buffer = new byte[1024]; // The variable that will store the recieved data
