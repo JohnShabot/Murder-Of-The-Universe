@@ -23,6 +23,9 @@ public class ServerManager : MonoBehaviour
     }
     public void ConnectToHost(string hostName, string pass)
     {
+        byte[] sendData = Encoding.ASCII.GetBytes("Close|"); // Turns data to bytes
+        NetworkStream stream = M.GetStream();
+        stream.Write(sendData, 0, sendData.Length); // Sends the data
         M.Close(); // Closes the connection
     }
     public void Host(string roomName, string pass)
@@ -66,11 +69,11 @@ public class ServerManager : MonoBehaviour
         stream.Write(sendData, 0, sendData.Length); // Sends the data
         byte[] buffer = new byte[1024]; // The variable that will store the recieved data
         stream.Read(buffer, 0, 1024); // Read the data
-        int data = BitConverter.ToInt32(buffer, 0); // Turn the data into an int
+        string data = Encoding.ASCII.GetString(buffer); // Turn the data into an int
         Debug.Log(data);
         stream.Read(buffer, 0, 1024);
         Debug.Log(Encoding.ASCII.GetString(buffer));
-        return data;
+        return int.Parse(data);
     }
     public int Verify(string code)
     {
@@ -79,11 +82,17 @@ public class ServerManager : MonoBehaviour
         stream.Write(sendData, 0, sendData.Length); // Sends the data
         byte[] buffer = new byte[1024]; // The variable that will store the recieved data
         stream.Read(buffer, 0, 1024); // Read the data
-        int data=0;
-        BitConverter.ToInt32(buffer,data); // Turn the data into a string
+        string data = Encoding.ASCII.GetString(buffer); // Turn the data into an int
         Debug.Log(data);
         stream.Read(buffer, 0, 1024);
         Debug.Log(Encoding.ASCII.GetString(buffer));
-        return data;
+        return int.Parse(data);
+    }
+    public void CloseConnection()
+    {
+        byte[] sendData = Encoding.ASCII.GetBytes("Close|"); // Turns data to bytes
+        NetworkStream stream = M.GetStream();
+        stream.Write(sendData, 0, sendData.Length); // Sends the data
+        M.Close();
     }
 }

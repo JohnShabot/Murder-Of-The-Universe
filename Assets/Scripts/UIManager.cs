@@ -29,6 +29,7 @@ public class UIManager : MonoBehaviour
 
     public void ExitGame()
     {
+        gameObject.GetComponent<ServerManager>().CloseConnection();
         Application.Quit();
     }
 
@@ -125,13 +126,13 @@ public class UIManager : MonoBehaviour
         InputField text = verifyRoom.GetComponentInChildren<InputField>();
         GameObject lbl = GameObject.Find("Invalid Details");
         int s = gameObject.GetComponent<ServerManager>().Verify(text.text);
-        if (s == -1)
+        if (s == 1)
         {
             ChangeScreen("Room Selector");
             text.text = "";
             lbl.GetComponent<Text>().text = "";
         }
-        else if (s > 0)
+        else if (s < 0)
         {
             lbl.GetComponent<Text>().text = "Invalid Code, Try Again, Tries Left: " + s;
         }

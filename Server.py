@@ -15,10 +15,9 @@ def client_connection(c, c_address):
             data = data.split('|')
             if data[0] == "VERIFY":
                 print(data)
-                data = data[1].split('#')
                 try:
                     if tries > 0:
-                        tries += verify(data[0], c, a)
+                        tries += verify(data[1], c, a, tries)
                         c.send("accepted".encode())
                 except Exception as exc:
                     c.send(("An Error Occurred " + str(type(exc)) + str(exc)).encode())
@@ -36,6 +35,7 @@ def client_connection(c, c_address):
                 try:
                     a = login(data[0], data[1], c)
                     c.send("Accepted".encode())
+                    print(a)
                 except Exception as exc:
                     c.send(("An Error Occurred "+str(type(exc)) + str(exc)).encode())
             if data[0] == 'START':
@@ -45,7 +45,7 @@ def client_connection(c, c_address):
                 print(data)
                 data = data[1].split('#')
                 try:
-                    start_host(c_address, data[0], data[1])
+                    host(c_address, data[0], data[1])
                     c.send("Accepted".encode())
                 except:
                     c.send("An Error Occurred".encode())
@@ -53,7 +53,7 @@ def client_connection(c, c_address):
                 print(data)
                 try:
                     c.send("Accepted".encode())
-                    send_active_servers(c)
+                    refresh(c)
                 except:
                     c.send("An Error Occurred".encode())
 
@@ -65,10 +65,10 @@ def login(name, password, c):
     print(data)
     if data == []:
         print("wrong user")
-        c.send(bytes(0))
+        c.send("0".encode())
     elif data[0][0] == password:
         print("correct")
-        c.send(bytes(1))
+        c.send("1".encode())
         with smtplib.SMTP('smtp.gmail.com', 587) as smtp:
             smtp.ehlo()
             smtp.starttls()
@@ -88,7 +88,7 @@ def login(name, password, c):
             return a
     else:
         print("wrong pass")
-        c.send(bytes(0))
+        c.send("0".encode())
 
 
 def register(name, password, email):
@@ -96,13 +96,15 @@ def register(name, password, email):
     crsr.execute("INSERT INTO Users(Name, Password, Email, Wins) values(?, ?, ?,0)", (name, password, email))
 
 
-def verify(code, c, a):
+def verify(code, c, a, tries):
 
-    if code == a:
-        c.send(bytes(-1))
+    if int(code) == a:
+        print("success")
+        c.send("1".encode())
         return 0
     else:
-        c.send(bytes(0))
+        print("failed")
+        c.send(str(1-tries).encode())
         return -1
 
 
@@ -124,7 +126,7 @@ def start_server():
             print("Server Full... try again " + str(exc))
 
 
-def start_host(c_address, name, password):
+def host(c_address, name, password):
     global host_list
     print('entered def')
     host_list[name] = [password, False, c_address]
@@ -133,7 +135,7 @@ def start_host(c_address, name, password):
         print(key + "'s room: " + str(host_list[key]))
 
 
-def send_active_servers(c):
+def refresh(c):
     global host_list, s
     str_send = ''
     for key in host_list:
@@ -143,7 +145,7 @@ def send_active_servers(c):
     c.send(str_send.encode())
 
 
-def connect_to_host(name, password, c):
+def connect(name, password, c):
     global host_list, s
 
 
