@@ -13,7 +13,7 @@ public class ServerManager : MonoBehaviour
     public void ConnectToMain()
     {
         M = new TcpClient("127.0.0.1", 8888);  // Connects to server 
-        byte[] sendData = Encoding.ASCII.GetBytes("LOGIN"); // Turns data to bytes
+        byte[] sendData = Encoding.ASCII.GetBytes("START"); // Turns data to bytes
         NetworkStream stream = M.GetStream();
         stream.Write(sendData, 0, sendData.Length); // Sends the data
         byte[] buffer= new byte[1024];
@@ -47,6 +47,43 @@ public class ServerManager : MonoBehaviour
         stream.Read(buffer, 0, 1024); // Read the data
         data = Encoding.ASCII.GetString(buffer); // Turn the data into a string
         Debug.Log(data);
+        return data;
+    }
+    public void Register(string roomName, string email, string pass)
+    {
+        byte[] sendData = Encoding.ASCII.GetBytes("REGISTER|" + roomName + "#" + Hash128.Compute(pass).ToString() + "#" + email); // Turns data to bytes
+        NetworkStream stream = M.GetStream();
+        stream.Write(sendData, 0, sendData.Length); // Sends the data
+        byte[] buffer = new byte[1024]; // The variable that will store the recieved data
+        stream.Read(buffer, 0, 1024); // Read the data
+        string data = Encoding.ASCII.GetString(buffer); // Turn the data into a string
+        Debug.Log(data);
+    }
+    public int Login(string name, string pass)
+    {
+        byte[] sendData = Encoding.ASCII.GetBytes("LOGIN|" + name + "#" + Hash128.Compute(pass).ToString()); // Turns data to bytes
+        NetworkStream stream = M.GetStream();
+        stream.Write(sendData, 0, sendData.Length); // Sends the data
+        byte[] buffer = new byte[1024]; // The variable that will store the recieved data
+        stream.Read(buffer, 0, 1024); // Read the data
+        int data = BitConverter.ToInt32(buffer, 0); // Turn the data into an int
+        Debug.Log(data);
+        stream.Read(buffer, 0, 1024);
+        Debug.Log(Encoding.ASCII.GetString(buffer));
+        return data;
+    }
+    public int Verify(string code)
+    {
+        byte[] sendData = Encoding.ASCII.GetBytes("VERIFY|" + code); // Turns data to bytes
+        NetworkStream stream = M.GetStream();
+        stream.Write(sendData, 0, sendData.Length); // Sends the data
+        byte[] buffer = new byte[1024]; // The variable that will store the recieved data
+        stream.Read(buffer, 0, 1024); // Read the data
+        int data=0;
+        BitConverter.ToInt32(buffer,data); // Turn the data into a string
+        Debug.Log(data);
+        stream.Read(buffer, 0, 1024);
+        Debug.Log(Encoding.ASCII.GetString(buffer));
         return data;
     }
 }

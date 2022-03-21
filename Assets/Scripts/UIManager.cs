@@ -42,11 +42,12 @@ public class UIManager : MonoBehaviour
         {
             if (s.name == "Room Create Screen") createRoom = s;
         }
-        InputField[] texts = createRoom.GetComponentsInChildren<UnityEngine.UI.InputField>();
+        InputField[] texts = createRoom.GetComponentsInChildren<InputField>();
         name = texts[0];
         pass = texts[1];
-
         gameObject.GetComponent<ServerManager>().Host(name.text, pass.text);
+        texts[0].text = "";
+        texts[1].text = "";
         ChangeScreen("Room");
     }
     public void RefreshRooms()
@@ -79,6 +80,65 @@ public class UIManager : MonoBehaviour
 
     public void ConnectToRoom()
     {
-        gameObject.GetComponent<ServerManager>().ConnectToHost();
+        gameObject.GetComponent<ServerManager>().ConnectToHost("","");
+    }
+    public void Register()
+    {
+        Canvas createRoom = screens[3];
+
+        InputField[] texts = createRoom.GetComponentsInChildren<InputField>();
+
+        if (texts[2].text == texts[3].text)
+        {
+            gameObject.GetComponent<ServerManager>().Register(texts[0].text, texts[1].text, texts[2].text);
+            ChangeScreen("Two Factor Auth");    
+        }
+        texts[0].text = ""; //Revert The Input Fields
+        texts[1].text = "";
+        texts[2].text = "";
+        texts[3].text = "";
+
+    }
+    public void Login()
+    {
+        Canvas createRoom = screens[2];
+        InputField[] texts = createRoom.GetComponentsInChildren<InputField>();
+        GameObject lbl = GameObject.Find("Invalid Details");
+        int s = gameObject.GetComponent<ServerManager>().Login(texts[0].text, texts[1].text);
+        Debug.Log("func result: " + s);
+        if (s == 1)
+        {
+            ChangeScreen("Two Factor Auth");
+            texts[0].text = "";
+            texts[1].text = "";
+            lbl.GetComponent<Text>().text = "";
+        }
+        else
+        {
+            lbl.GetComponent<Text>().text = "Invalid Details";
+        }
+
+    }
+    public void verify()
+    {
+        Canvas verifyRoom = screens[4];
+        InputField text = verifyRoom.GetComponentInChildren<InputField>();
+        GameObject lbl = GameObject.Find("Invalid Details");
+        int s = gameObject.GetComponent<ServerManager>().Verify(text.text);
+        if (s == -1)
+        {
+            ChangeScreen("Room Selector");
+            text.text = "";
+            lbl.GetComponent<Text>().text = "";
+        }
+        else if (s > 0)
+        {
+            lbl.GetComponent<Text>().text = "Invalid Code, Try Again, Tries Left: " + s;
+        }
+        else if (s == 0)
+        {
+            GameObject Btn = GameObject.Find("Verify Button");
+            Btn.SetActive(false);
+        }
     }
 }
