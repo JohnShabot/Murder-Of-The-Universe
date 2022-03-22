@@ -7,16 +7,20 @@ public class UIManager : MonoBehaviour
     public Canvas[] screens;
     public GameObject LabelTemplate;
     public GameObject RoomsSection;
+    public GameObject passwordPanel;
 
-    List<GameObject> roomLabels = new List<GameObject>();
+    private string UserName;
+    List<GameObject> roomLabels;
 
     private void Start()
     {
+        passwordPanel.SetActive(false);
         foreach (Canvas s in screens)
         {
             if (s.name == "Title Screen") s.enabled = true;
             else s.enabled = false;
         }
+        roomLabels = new List<GameObject>();
     }
     public void ChangeScreen(string changeTo)
     {
@@ -26,7 +30,6 @@ public class UIManager : MonoBehaviour
             else s.enabled = false;
         }
     }
-
     public void ExitGame()
     {
         gameObject.GetComponent<ServerManager>().CloseConnection();
@@ -46,10 +49,17 @@ public class UIManager : MonoBehaviour
         InputField[] texts = createRoom.GetComponentsInChildren<InputField>();
         name = texts[0];
         pass = texts[1];
-        gameObject.GetComponent<ServerManager>().Host(name.text, pass.text);
-        texts[0].text = "";
-        texts[1].text = "";
-        ChangeScreen("Room");
+        if(name.text != "")
+        {
+            if(pass.text != "") gameObject.GetComponent<ServerManager>().Host(name.text, pass.text, UserName);
+            else gameObject.GetComponent<ServerManager>().Host(name.text, "", UserName);
+            texts[0].text = "";
+            texts[1].text = "";
+            GameObject P1 = GameObject.Find("P1");
+            P1.GetComponentInChildren<Text>().text = "P1: " + UserName;
+            ChangeScreen("Room");
+        }
+        
     }
     public void RefreshRooms()
     {
@@ -68,7 +78,7 @@ public class UIManager : MonoBehaviour
         int topY = 800;
         foreach (string room in roomsLst)
         {
-            if(!room.StartsWith("end"))
+            if(room !="")
             {
                 Debug.Log(room);
                 GameObject RoomLabel = Instantiate(LabelTemplate, new Vector3(385, topY, 0), new Quaternion(0,0,0,1), RoomsSection.transform);
@@ -76,23 +86,36 @@ public class UIManager : MonoBehaviour
                 topY -= 70;
                 roomLabels.Add(RoomLabel);
             }
+            else
+            {
+                break;
+            }
         }
     }
+    public void GetPassword()
+    {
+        passwordPanel.SetActive(true);
 
+    }
     public void ConnectToRoom()
     {
         gameObject.GetComponent<ServerManager>().ConnectToHost("","");
     }
+
     public void Register()
     {
-        Canvas createRoom = screens[3];
+        Canvas RegisterScreen = screens[3];
 
-        InputField[] texts = createRoom.GetComponentsInChildren<InputField>();
-
+        InputField[] texts = RegisterScreen.GetComponentsInChildren<InputField>();
+        GameObject lbl = GameObject.Find("Invalid Details SU");
         if (texts[2].text == texts[3].text)
         {
             gameObject.GetComponent<ServerManager>().Register(texts[0].text, texts[1].text, texts[2].text);
             ChangeScreen("Two Factor Auth");    
+        }
+        else
+        {
+            lbl.GetComponent<Text>().text = "Invalid Details";
         }
         texts[0].text = ""; //Revert The Input Fields
         texts[1].text = "";
@@ -102,13 +125,14 @@ public class UIManager : MonoBehaviour
     }
     public void Login()
     {
-        Canvas createRoom = screens[2];
-        InputField[] texts = createRoom.GetComponentsInChildren<InputField>();
-        GameObject lbl = GameObject.Find("Invalid Details");
+        Canvas LoginScreen = screens[2];
+        InputField[] texts = LoginScreen.GetComponentsInChildren<InputField>();
+        GameObject lbl = GameObject.Find("Invalid Details LI");
         int s = gameObject.GetComponent<ServerManager>().Login(texts[0].text, texts[1].text);
         Debug.Log("func result: " + s);
         if (s == 1)
         {
+            UserName = texts[0].text;
             ChangeScreen("Two Factor Auth");
             texts[0].text = "";
             texts[1].text = "";
@@ -124,7 +148,7 @@ public class UIManager : MonoBehaviour
     {
         Canvas verifyRoom = screens[4];
         InputField text = verifyRoom.GetComponentInChildren<InputField>();
-        GameObject lbl = GameObject.Find("Invalid Details");
+        GameObject lbl = GameObject.Find("Invalid Details 2FA");
         int s = gameObject.GetComponent<ServerManager>().Verify(text.text);
         if (s == 1)
         {

@@ -28,9 +28,9 @@ public class ServerManager : MonoBehaviour
         stream.Write(sendData, 0, sendData.Length); // Sends the data
         M.Close(); // Closes the connection
     }
-    public void Host(string roomName, string pass)
+    public void Host(string roomName, string pass, string username)
     {
-        byte[] sendData = Encoding.ASCII.GetBytes("HOST|" + roomName + "#" + Hash128.Compute(pass).ToString()); // Turns data to bytes
+        byte[] sendData = Encoding.ASCII.GetBytes("HOST|" + roomName + "#" + Hash128.Compute(pass).ToString() + "#" + username); // Turns data to bytes
         NetworkStream stream = M.GetStream();
         stream.Write(sendData, 0, sendData.Length); // Sends the data
         byte[] buffer = new byte[1024]; // The variable that will store the recieved data
