@@ -9,19 +9,20 @@ def client_connection(c, c_address):
     global s
     a = ""
     tries = 3
+    loggedin = False
     while True:
         data = c.recv(1024).decode()
         if data != "":
             data = data.split('|')
-            if data[0] == "VERIFY":
+        elif data[0] == "VERIFY":
                 print(data)
                 try:
-                    if tries > 0:
-                        tries += verify(data[1], c, a, tries)
+                    if tries > 0 and not loggedin:
+                        loggedin = verify(data[1], c, a, tries)
                         c.send("accepted".encode())
                 except Exception as exc:
                     c.send(("An Error Occurred " + str(type(exc)) + str(exc)).encode())
-            if data[0] == 'REGISTER':
+        elif data[0] == 'REGISTER' and not loggedin:
                 print(data)
                 data = data[1].split('#')
                 try:
@@ -29,7 +30,7 @@ def client_connection(c, c_address):
                     c.send("accepted".encode())
                 except Exception as exc:
                     c.send(("An Error Occurred "+str(type(exc)) + str(exc)).encode())
-            if data[0] == 'LOGIN':
+        elif data[0] == 'LOGIN' and not loggedin:
                 print(data)
                 data = data[1].split('#')
                 try:
@@ -38,24 +39,31 @@ def client_connection(c, c_address):
                     print(a)
                 except Exception as exc:
                     c.send(("An Error Occurred "+str(type(exc)) + str(exc)).encode())
-            if data[0] == 'START':
+        elif data[0] == 'START':
                 print(data)
                 c.send("Accepted".encode())
-            if data[0] == 'HOST':
+        elif data[0] == 'HOST' and loggedin:
                 print(data)
                 data = data[1].split('#')
                 try:
                     host(c_address, data[0], data[1], data[2])
                     c.send("Accepted".encode())
-                except:
-                    c.send("An Error Occurred".encode())
-            if data[0] == 'REFRESH':
+                except Exception as exc:
+                    c.send(("An Error Occurred "+str(type(exc)) + str(exc)).encode())
+        elif data[0] == 'REFRESH' and loggedin:
                 print(data)
                 try:
                     c.send("Accepted".encode())
                     refresh(c)
-                except:
-                    c.send("An Error Occurred".encode())
+                except Exception as exc:
+                    c.send(("An Error Occurred "+str(type(exc)) + str(exc)).encode())
+        elif data[0] == 'JOIN' and loggedin:
+            print(data)
+            try:
+                c.send("Accepted".encode())
+                join(data[0], data[1], c)
+            except Exception as exc:
+                c.send(("An Error Occurred "+str(type(exc)) + str(exc)).encode())
 
 
 def login(name, password, c):
@@ -114,10 +122,11 @@ def verify(code, c, a, tries):
 
     if int(code) == a:
         c.send("1".encode())
-        return 0
+        return True
     else:
         c.send(str(1-tries).encode())
-        return -1
+        tries -= 1
+        return False
 
 
 def start_server():
@@ -154,9 +163,12 @@ def refresh(c):
     c.send(str_send.encode())
 
 
-def connect(name, password, c):
+def join(name, password, c):
     global host_list, s
-
+    if host_list[name][0] == password:
+        c.send(str(host_list[3]).encode())
+    else:
+        c.send('0')
 
 
 host_list = {}
