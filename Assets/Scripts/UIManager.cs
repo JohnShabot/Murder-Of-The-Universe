@@ -9,6 +9,7 @@ public class UIManager : MonoBehaviour
     public GameObject RoomsSection;
     public GameObject passwordPanel;
 
+    string currRoom;
     private string UserName;
     List<GameObject> roomLabels;
 
@@ -84,6 +85,7 @@ public class UIManager : MonoBehaviour
                 GameObject RoomLabel = Instantiate(LabelTemplate, new Vector3(385, topY, 0), new Quaternion(0,0,0,1), RoomsSection.transform);
                 RoomLabel.GetComponentInChildren<Text>().text = room;
                 topY -= 70;
+                RoomLabel.GetComponent<RoomPress>().setName(room);
                 roomLabels.Add(RoomLabel);
             }
             else
@@ -92,14 +94,16 @@ public class UIManager : MonoBehaviour
             }
         }
     }
-    public void GetPassword()
+    public void GetPassword(string name)
     {
+        currRoom = name;
         passwordPanel.SetActive(true);
-
     }
     public void ConnectToRoom()
     {
-        gameObject.GetComponent<ServerManager>().ConnectToHost("","");
+        gameObject.GetComponent<ServerManager>().ConnectToHost(currRoom, passwordPanel.GetComponentInChildren<InputField>().text);
+        passwordPanel.GetComponentInChildren<InputField>().text = "";
+        passwordPanel.SetActive(false);
     }
 
     public void Register()

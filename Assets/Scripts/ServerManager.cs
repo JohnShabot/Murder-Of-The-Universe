@@ -13,7 +13,7 @@ public class ServerManager : MonoBehaviour
     public void ConnectToMain()
     {
         M = new TcpClient("127.0.0.1", 8888);  // Connects to server 
-        byte[] sendData = Encoding.ASCII.GetBytes("START"); // Turns data to bytes
+        byte[] sendData = Encoding.ASCII.GetBytes("START| "); // Turns data to bytes
         NetworkStream stream = M.GetStream();
         stream.Write(sendData, 0, sendData.Length); // Sends the data
         byte[] buffer= new byte[1024];
@@ -23,8 +23,18 @@ public class ServerManager : MonoBehaviour
     }
     public void ConnectToHost(string hostName, string pass)
     {
-        byte[] sendData = Encoding.ASCII.GetBytes("Close|"); // Turns data to bytes
+        byte[] sendData = Encoding.ASCII.GetBytes("JOIN|" + hostName + "#" + Hash128.Compute(pass).ToString()); // Turns data to bytes
         NetworkStream stream = M.GetStream();
+        stream.Write(sendData, 0, sendData.Length); // Sends the data
+        byte[] buffer = new byte[1024];
+        stream.Read(buffer, 0, 1024);
+        string data = Encoding.ASCII.GetString(buffer);
+        Debug.Log(data);
+        buffer = new byte[1024];
+        stream.Read(buffer, 0, 1024);
+        data = Encoding.ASCII.GetString(buffer);
+        Debug.Log(data);
+        sendData = Encoding.ASCII.GetBytes("CLOSE| "); // Turns data to bytes
         stream.Write(sendData, 0, sendData.Length); // Sends the data
         M.Close(); // Closes the connection
     }
@@ -37,6 +47,7 @@ public class ServerManager : MonoBehaviour
         stream.Read(buffer, 0, 1024); // Read the data
         string data = Encoding.ASCII.GetString(buffer); // Turn the data into a string
         Debug.Log(data);
+        
     }
     public string RefreshList()
     {
@@ -90,7 +101,7 @@ public class ServerManager : MonoBehaviour
     }
     public void CloseConnection()
     {
-        byte[] sendData = Encoding.ASCII.GetBytes("Close|"); // Turns data to bytes
+        byte[] sendData = Encoding.ASCII.GetBytes("Close| "); // Turns data to bytes
         NetworkStream stream = M.GetStream();
         stream.Write(sendData, 0, sendData.Length); // Sends the data
         M.Close();

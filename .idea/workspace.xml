@@ -7,34 +7,6 @@
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="FileEditorManager">
-    <leaf>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/Server.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="329">
-              <caret line="170" column="19" selection-start-line="170" selection-start-column="19" selection-end-line="170" selection-end-column="19" />
-              <folding>
-                <element signature="e#334#662#0" />
-                <element signature="e#448#530#0" />
-                <element signature="e#738#1047#0" />
-                <element signature="e#1040#1369#0" />
-                <element signature="e#1487#1542#0" />
-                <element signature="e#1527#1793#0" />
-                <element signature="e#1935#2127#0" />
-                <element signature="e#2076#2979#0" />
-                <element signature="e#3023#3755#0" />
-                <element signature="e#3794#3936#0" />
-                <element signature="e#3951#4371#0" />
-                <element signature="e#4425#4584#0" />
-                <element signature="e#4607#4809#0" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-    </leaf>
-  </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
@@ -45,34 +17,8 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="IdeDocumentHistory">
-    <option name="CHANGED_PATHS">
-      <list>
-        <option value="$PROJECT_DIR$/Server.py" />
-      </list>
-    </option>
-  </component>
   <component name="ProjectId" id="24ON0EZE6KkdAJFIqdY0dVRD836" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
-  <component name="ProjectView">
-    <navigator proportions="" version="1">
-      <foldersAlwaysOnTop value="true" />
-    </navigator>
-    <panes>
-      <pane id="Course" />
-      <pane id="ProjectPane">
-        <subPane>
-          <expand>
-            <path>
-              <item name="RevengeOfTheBiopiece" type="b2602c69:ProjectViewProjectNode" />
-              <item name="RevengeOfTheBiopiece" type="462c0819:PsiDirectoryNode" />
-            </path>
-          </expand>
-          <select />
-        </subPane>
-      </pane>
-    </panes>
-  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -81,18 +27,6 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
-  </component>
-  <component name="RunDashboard">
-    <option name="ruleStates">
-      <list>
-        <RuleState>
-          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
-        </RuleState>
-        <RuleState>
-          <option name="name" value="StatusDashboardGroupingRule" />
-        </RuleState>
-      </list>
-    </option>
   </component>
   <component name="RunManager">
     <configuration name="Server" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
@@ -122,7 +56,7 @@
       </list>
     </recent_temporary>
   </component>
-  <component name="SpellCheckerSettings" BundledDictionaries="0" Folders="0" CustomDictionaries="0" Dictionaries="0" CorrectionsLimit="5" DefaultDictionary="application-level" UseSingleDictionary="true" />
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="SvnConfiguration">
     <configuration />
   </component>
@@ -136,52 +70,30 @@
     </task>
     <servers />
   </component>
-  <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1382" height="784" extended-state="6" />
-    <editor active="true" />
-    <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.25" />
-      <window_info id="Structure" order="1" weight="0.25" />
-      <window_info anchor="bottom" id="Educational.CheckDetails" />
-      <window_info anchor="bottom" id="Version Control" />
-      <window_info anchor="bottom" id="Terminal" />
-      <window_info anchor="bottom" id="Python Console" />
-      <window_info anchor="bottom" id="Message" order="0" />
-      <window_info anchor="bottom" id="Find" order="1" weight="0.3298969" />
-      <window_info anchor="bottom" id="Run" order="2" weight="0.3298969" />
-      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
-      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
-      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
-      <window_info anchor="bottom" id="TODO" order="6" />
-      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
-      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
-      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
-    </layout>
-  </component>
   <component name="WindowStateProjectService">
     <state x="2660" y="294" key="FileChooserDialogImpl" timestamp="1647102772407">
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>
     <state x="2660" y="294" key="FileChooserDialogImpl/1920.0.1920.1080/0.0.1920.1080@1920.0.1920.1080" timestamp="1647102772407" />
-    <state width="936" height="278" key="GridCell.Tab.0.bottom" timestamp="1647981809344">
+    <state width="993" height="278" key="GridCell.Tab.0.bottom" timestamp="1649018997273">
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>
-    <state width="936" height="278" key="GridCell.Tab.0.bottom/1920.0.1920.1080/0.0.1920.1080@1920.0.1920.1080" timestamp="1647981809344" />
-    <state width="936" height="278" key="GridCell.Tab.0.center" timestamp="1647981809344">
+    <state width="993" height="278" key="GridCell.Tab.0.bottom/1920.0.1920.1080/0.0.1920.1080@1920.0.1920.1080" timestamp="1649018997273" />
+    <state width="993" height="278" key="GridCell.Tab.0.center" timestamp="1649018997272">
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>
-    <state width="936" height="278" key="GridCell.Tab.0.center/1920.0.1920.1080/0.0.1920.1080@1920.0.1920.1080" timestamp="1647981809344" />
-    <state width="936" height="278" key="GridCell.Tab.0.left" timestamp="1647981809344">
+    <state width="993" height="278" key="GridCell.Tab.0.center/1920.0.1920.1080/0.0.1920.1080@1920.0.1920.1080" timestamp="1649018997272" />
+    <state width="993" height="278" key="GridCell.Tab.0.left" timestamp="1649018997272">
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>
-    <state width="936" height="278" key="GridCell.Tab.0.left/1920.0.1920.1080/0.0.1920.1080@1920.0.1920.1080" timestamp="1647981809344" />
-    <state width="936" height="278" key="GridCell.Tab.0.right" timestamp="1647981809344">
+    <state width="993" height="278" key="GridCell.Tab.0.left/1920.0.1920.1080/0.0.1920.1080@1920.0.1920.1080" timestamp="1649018997272" />
+    <state width="993" height="278" key="GridCell.Tab.0.right" timestamp="1649018997272">
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>
-    <state width="936" height="278" key="GridCell.Tab.0.right/1920.0.1920.1080/0.0.1920.1080@1920.0.1920.1080" timestamp="1647981809344" />
-    <state x="2381" y="184" key="SettingsEditor" timestamp="1647872812007">
+    <state width="993" height="278" key="GridCell.Tab.0.right/1920.0.1920.1080/0.0.1920.1080@1920.0.1920.1080" timestamp="1649018997272" />
+    <state x="2381" y="184" key="SettingsEditor" timestamp="1648821393391">
       <screen x="1920" y="0" width="1920" height="1080" />
     </state>
-    <state x="2381" y="184" key="SettingsEditor/1920.0.1920.1080/0.0.1920.1080@1920.0.1920.1080" timestamp="1647872812007" />
+    <state x="2381" y="184" key="SettingsEditor/1920.0.1920.1080/0.0.1920.1080@1920.0.1920.1080" timestamp="1648821393391" />
   </component>
 </project>

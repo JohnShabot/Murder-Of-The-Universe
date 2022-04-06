@@ -6,23 +6,25 @@ import random
 
 
 def client_connection(c, c_address):
+    print("connected + " + str(c_address))
     global s
     a = ""
     tries = 3
-    loggedin = False
+    logged_in = False
     while True:
         data = c.recv(1024).decode()
+        print(data)
         if data != "":
             data = data.split('|')
-        elif data[0] == "VERIFY":
+            if data[0] == "VERIFY":
                 print(data)
                 try:
-                    if tries > 0 and not loggedin:
-                        loggedin = verify(data[1], c, a, tries)
+                    if tries > 0 and not logged_in:
+                        logged_in = verify(data[1], c, a, tries)
                         c.send("accepted".encode())
                 except Exception as exc:
                     c.send(("An Error Occurred " + str(type(exc)) + str(exc)).encode())
-        elif data[0] == 'REGISTER' and not loggedin:
+            elif data[0] == 'REGISTER' and not logged_in:
                 print(data)
                 data = data[1].split('#')
                 try:
@@ -30,7 +32,7 @@ def client_connection(c, c_address):
                     c.send("accepted".encode())
                 except Exception as exc:
                     c.send(("An Error Occurred "+str(type(exc)) + str(exc)).encode())
-        elif data[0] == 'LOGIN' and not loggedin:
+            elif data[0] == 'LOGIN' and not logged_in:
                 print(data)
                 data = data[1].split('#')
                 try:
@@ -39,10 +41,10 @@ def client_connection(c, c_address):
                     print(a)
                 except Exception as exc:
                     c.send(("An Error Occurred "+str(type(exc)) + str(exc)).encode())
-        elif data[0] == 'START':
+            elif data[0] == 'START':
                 print(data)
                 c.send("Accepted".encode())
-        elif data[0] == 'HOST' and loggedin:
+            elif data[0] == 'HOST' and logged_in:
                 print(data)
                 data = data[1].split('#')
                 try:
@@ -50,20 +52,24 @@ def client_connection(c, c_address):
                     c.send("Accepted".encode())
                 except Exception as exc:
                     c.send(("An Error Occurred "+str(type(exc)) + str(exc)).encode())
-        elif data[0] == 'REFRESH' and loggedin:
+            elif data[0] == 'REFRESH' and logged_in:
                 print(data)
                 try:
                     c.send("Accepted".encode())
                     refresh(c)
                 except Exception as exc:
                     c.send(("An Error Occurred "+str(type(exc)) + str(exc)).encode())
-        elif data[0] == 'JOIN' and loggedin:
-            print(data)
-            try:
-                c.send("Accepted".encode())
-                join(data[0], data[1], c)
-            except Exception as exc:
-                c.send(("An Error Occurred "+str(type(exc)) + str(exc)).encode())
+            elif data[0] == 'JOIN' and logged_in:
+                print(data)
+                data = data[1].split('#')
+                try:
+                    c.send("Accepted".encode())
+                    join(data[0], data[1], c)
+                except Exception as exc:
+                    c.send(("An Error Occurred "+str(type(exc)) + str(exc)).encode())
+            elif data[0] == 'CLOSE':
+                close(c)
+                break
 
 
 def login(name, password, c):
@@ -129,24 +135,6 @@ def verify(code, c, a, tries):
         return False
 
 
-def start_server():
-    global s
-    s.bind(('0.0.0.0', 8888))
-    print('server started')
-    s.listen(999)
-    t = []
-
-    while True:
-        try:
-            print("listening")
-            c, c_address = s.accept()
-            temp = threading.Thread(target=client_connection, args=(c, c_address))
-            temp.start()
-            t.append(temp)
-        except Exception as exc:
-            print("Server Full... try again " + str(exc))
-
-
 def host(c_address, name, password, username):
     global host_list
     host_list[name] = [password, username, False, c_address]
@@ -166,9 +154,32 @@ def refresh(c):
 def join(name, password, c):
     global host_list, s
     if host_list[name][0] == password:
-        c.send(str(host_list[3]).encode())
+        print(host_list[name][3])
+        c.send(str(host_list[name][3]).encode())
     else:
-        c.send('0')
+        c.send('0'.encode())
+
+
+def close(c):
+    c.close()
+
+
+def start_server():
+    global s
+    s.bind(('0.0.0.0', 8888))
+    print('server started')
+    s.listen(999)
+    t = []
+
+    while True:
+        try:
+            print("listening")
+            c, c_address = s.accept()
+            temp = threading.Thread(target=client_connection, args=(c, c_address))
+            temp.start()
+            t.append(temp)
+        except Exception as exc:
+            print("Server Full... try again " + str(exc))
 
 
 host_list = {}

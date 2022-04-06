@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class RoomPress : MonoBehaviour
 {
+    string name;
     // Start is called before the first frame update
     void Start()
     {
@@ -20,6 +21,10 @@ public class RoomPress : MonoBehaviour
     void OnClick()
     {
         GameObject Managers = GameObject.FindGameObjectWithTag("Manager");
-        Managers.GetComponent<UIManager>().ConnectToRoom();
+        Managers.GetComponent<UIManager>().GetPassword(name);
+    }
+    public void setName(string name)
+    {
+        this.name = name;
     }
 }
