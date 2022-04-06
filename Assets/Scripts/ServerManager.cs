@@ -8,8 +8,19 @@ using System;
 public class ServerManager : MonoBehaviour
 {
     TcpClient M; // The socket that will connect to the main server
-    Socket P2P; // The socket that will host / connect to a host in the Peer To Peer connection
-
+    UDPSocket sock= new UDPSocket(); //The Socket Used In The P2P UDP Connection
+    bool startedHost = false;
+    void Update()
+    {
+        if (startedHost)
+        {
+            try
+            {
+                sock.Receive();
+            }
+            catch { }
+        }
+    }
     public void ConnectToMain()
     {
         M = new TcpClient("127.0.0.1", 8888);  // Connects to server 
@@ -28,15 +39,17 @@ public class ServerManager : MonoBehaviour
         stream.Write(sendData, 0, sendData.Length); // Sends the data
         byte[] buffer = new byte[1024];
         stream.Read(buffer, 0, 1024);
-        string data = Encoding.ASCII.GetString(buffer);
-        Debug.Log(data);
+        string ip = Encoding.ASCII.GetString(buffer);
+        Debug.Log(ip);
         buffer = new byte[1024];
         stream.Read(buffer, 0, 1024);
-        data = Encoding.ASCII.GetString(buffer);
+        string data = Encoding.ASCII.GetString(buffer);
         Debug.Log(data);
         sendData = Encoding.ASCII.GetBytes("CLOSE| "); // Turns data to bytes
         stream.Write(sendData, 0, sendData.Length); // Sends the data
         M.Close(); // Closes the connection
+        sock.Client("127.0.0.1", 8888);
+        sock.Send("JOIN|");
     }
     public void Host(string roomName, string pass, string username)
     {
@@ -47,7 +60,11 @@ public class ServerManager : MonoBehaviour
         stream.Read(buffer, 0, 1024); // Read the data
         string data = Encoding.ASCII.GetString(buffer); // Turn the data into a string
         Debug.Log(data);
-        
+        sendData = Encoding.ASCII.GetBytes("CLOSE| "); // Turns data to bytes
+        stream.Write(sendData, 0, sendData.Length); // Sends the data
+        M.Close(); // Closes the connection
+        sock.Server("0.0.0.0", 8888);
+        startedHost = true;
     }
     public string RefreshList()
     {
