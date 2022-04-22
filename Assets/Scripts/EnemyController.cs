@@ -39,15 +39,22 @@ public class EnemyController : MonoBehaviour
     }
     void Update()
     {
-        
-        Distance = Vector2.Distance(transform.position, GameObject.FindWithTag("Player").transform.position);
-
-        if (Distance < Range)
+        try
         {
-            Chase();
-        }
 
-        else
+            Distance = Vector2.Distance(transform.position, GameObject.FindWithTag("Player").transform.position);
+
+            if (Distance < Range)
+            {
+                Chase();
+            }
+
+            else
+            {
+                PatrolNext();
+            }
+        }
+        catch
         {
             PatrolNext();
         }

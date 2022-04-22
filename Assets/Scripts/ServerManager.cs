@@ -4,23 +4,60 @@ using UnityEngine;
 using System.Net.Sockets;
 using System.Text;
 using System;
+using System.Net;
+using System.Threading;
 
 public class ServerManager : MonoBehaviour
 {
     TcpClient M; // The socket that will connect to the main server
-    UDPSocket sock= new UDPSocket(); //The Socket Used In The P2P UDP Connection
-    bool startedHost = false;
+    UdpClient sock; // The Client for the actual game
+    IPEndPoint ep;
+
+    bool? isServer = null; // the bool to keep if this is a host or client, or not in that phase (when it's null)
+    Thread T = null;
+
+    string username = "";
     void Update()
     {
-        if (startedHost)
+        if(isServer.HasValue)
         {
-            try
+            if (isServer.Value)
             {
-                sock.Receive();
+                if(T == null)
+                {
+                    T = new Thread(new ThreadStart(HandleData));
+                    T.Start();
+                }
             }
-            catch { }
+            else if (!isServer.Value)
+            {
+                byte[] sendData = Encoding.ASCII.GetBytes("JOIN|" + username); // Turns data to bytes
+                sock.Send(sendData, sendData.Length, ep);
+                string data = Encoding.ASCII.GetString(sock.Receive(ref ep)); // then receive data 
+                Debug.Log(data);
+                Debug.Log("receive data from " + ep.ToString());
+            }
         }
+
+        
     }
+    void HandleData()
+    {
+        string data = Encoding.ASCII.GetString(sock.Receive(ref ep)); // receive data 
+        Debug.Log(data);
+        Debug.Log("receive data from " + ep.ToString());
+        byte[] sendData = Encoding.ASCII.GetBytes("Accepted|" + username); // Turns data to bytes
+        sock.Send(sendData, sendData.Length, ep);
+        T = null;
+    }
+    public void Join(string ip)
+    {
+        ep = new IPEndPoint(IPAddress.Parse(ip), 8888); // endpoint where server is listening
+        sock = new UdpClient(ep); // initialize socket
+        isServer = false;
+        Debug.Log("JOINED");
+    }
+
     public void ConnectToMain()
     {
         M = new TcpClient("127.0.0.1", 8888);  // Connects to server 
@@ -48,8 +85,8 @@ public class ServerManager : MonoBehaviour
         sendData = Encoding.ASCII.GetBytes("CLOSE| "); // Turns data to bytes
         stream.Write(sendData, 0, sendData.Length); // Sends the data
         M.Close(); // Closes the connection
-        sock.Client("127.0.0.1", 8888);
-        sock.Send("JOIN|");
+        data = data.Split('\'')[1];
+        Join(data);
     }
     public void Host(string roomName, string pass, string username)
     {
@@ -60,16 +97,17 @@ public class ServerManager : MonoBehaviour
         stream.Read(buffer, 0, 1024); // Read the data
         string data = Encoding.ASCII.GetString(buffer); // Turn the data into a string
         Debug.Log(data);
-        sendData = Encoding.ASCII.GetBytes("CLOSE| "); // Turns data to bytes
+        sendData = Encoding.ASCII.GetBytes("CLOSE|"); // Turns data to bytes
         stream.Write(sendData, 0, sendData.Length); // Sends the data
         M.Close(); // Closes the connection
-        sock.Server("0.0.0.0", 8888);
-        startedHost = true;
+        ep = new IPEndPoint(IPAddress.Any, 8888);  // listen on port 8888
+        sock = new UdpClient(ep); // initialize socket
+        isServer = true;
     }
     public string RefreshList()
     {
         NetworkStream stream = M.GetStream();
-        byte[] sendData = Encoding.ASCII.GetBytes("REFRESH"); // Turns data to bytes
+        byte[] sendData = Encoding.ASCII.GetBytes("REFRESH|"); // Turns data to bytes
         stream.Write(sendData, 0, sendData.Length); // Sends the data
         byte[] buffer = new byte[1024]; // The variable that will store the recieved data
         stream.Read(buffer, 0, 1024); // Read the data
@@ -101,6 +139,7 @@ public class ServerManager : MonoBehaviour
         Debug.Log(data);
         stream.Read(buffer, 0, 1024);
         Debug.Log(Encoding.ASCII.GetString(buffer));
+        username = name;
         return int.Parse(data);
     }
     public int Verify(string code)
@@ -116,7 +155,7 @@ public class ServerManager : MonoBehaviour
         Debug.Log(Encoding.ASCII.GetString(buffer));
         return int.Parse(data);
     }
-    public void CloseConnection()
+    public void CloseConnectionMain()
     {
         byte[] sendData = Encoding.ASCII.GetBytes("Close| "); // Turns data to bytes
         NetworkStream stream = M.GetStream();

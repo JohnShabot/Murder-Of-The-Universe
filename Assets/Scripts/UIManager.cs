@@ -33,7 +33,7 @@ public class UIManager : MonoBehaviour
     }
     public void ExitGame()
     {
-        gameObject.GetComponent<ServerManager>().CloseConnection();
+        gameObject.GetComponent<ServerManager>().CloseConnectionMain();
         Application.Quit();
     }
 
@@ -102,8 +102,10 @@ public class UIManager : MonoBehaviour
     public void ConnectToRoom()
     {
         gameObject.GetComponent<ServerManager>().ConnectToHost(currRoom, passwordPanel.GetComponentInChildren<InputField>().text);
+        ChangeScreen("Room");
         passwordPanel.GetComponentInChildren<InputField>().text = "";
         passwordPanel.SetActive(false);
+        
     }
 
     public void Register()

@@ -6,7 +6,7 @@ import random
 
 
 def client_connection(c, c_address):
-    print("connected + " + str(c_address))
+    print("connected: " + str(c_address))
     global s
     a = ""
     tries = 3
@@ -86,7 +86,7 @@ def login(name, password, c):
             smtp.ehlo()
             crsr.execute("SELECT Email FROM USERS WHERE Name = ?", (name,))
             email = crsr.fetchall()[0][0]
-            smtp.login("revengeofthedreamers3@gmail.com", "R3V3NG30fTh3Dr3m3rs")
+            # smtp.login("revengeofthedreamers3@gmail.com", "R3V3NG30fTh3Dr3m3rs")
 
             a = random.randint(1000, 10000)
 
@@ -95,7 +95,7 @@ def login(name, password, c):
 
             msg = f'Subject: {subject}\n\n{body}'
 
-            smtp.sendmail("revengeofthedreamers3@gmail.com", email, msg)
+            # smtp.sendmail("revengeofthedreamers3@gmail.com", email, msg)
             return a
     else:
         c.send("0".encode())
@@ -111,7 +111,7 @@ def register(name, password, email):
         smtp.ehlo()
         crsr.execute("SELECT Email FROM USERS WHERE Name = ?", (name,))
         email = crsr.fetchall()[0][0]
-        smtp.login("revengeofthedreamers3@gmail.com", "R3V3NG30fTh3Dr3m3rs")
+        # smtp.login("revengeofthedreamers3@gmail.com", "R3V3NG30fTh3Dr3m3rs")
 
         a = random.randint(1000, 10000)
 
@@ -120,7 +120,7 @@ def register(name, password, email):
 
         msg = f'Subject: {subject}\n\n{body}'
 
-        smtp.sendmail("revengeofthedreamers3@gmail.com", email, msg)
+        # smtp.sendmail("revengeofthedreamers3@gmail.com", email, msg)
         return a
 
 

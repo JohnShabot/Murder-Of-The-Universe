@@ -1,8 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Unity.Netcode;
 
-public class PlayerController : MonoBehaviour
+[RequireComponent(typeof(NetworkObject))]
+public class PlayerController : NetworkBehaviour
 {
     // General Variables
     Camera cam;
@@ -21,6 +23,12 @@ public class PlayerController : MonoBehaviour
     public Transform firePoint;
     public GameObject bullet;
 
+    [SerializeField]
+    private NetworkVariable<Vector2> networkPositionDirection = new NetworkVariable<Vector2>();
+
+    [SerializeField]
+    private NetworkVariable<Vector2> networkRotationDirection = new NetworkVariable<Vector2>();
+
     void Start()
     {
         body = GetComponent<Rigidbody2D>();
@@ -30,23 +38,40 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        movement();
-        shooting();
+        if (IsOwner && IsClient)
+        {
+            movement();
+            shooting();
+        }
+        else
+        {
+
+        }
     }
 
     private void FixedUpdate()
     {
-
-        body.MovePosition(body.position + position * PStats[2] * Time.fixedDeltaTime); //moves the player
-        Vector2 lookDir = mousePos - body.position;
-        float angle = Mathf.Atan2(lookDir.y, lookDir.x) * Mathf.Rad2Deg - 90f;
-        body.rotation = angle;
+        if (IsOwner && IsClient)
+        {
+            body.MovePosition(body.position + position * PStats[2] * Time.fixedDeltaTime); //moves the player
+        }
+        
     }
 
     void movement()
     {
-        position.x = Input.GetAxisRaw("Horizontal"); // gets the input from the WASD keys
-        position.y = Input.GetAxisRaw("Vertical");
+        Vector2 newPos = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical")); // gets the movement of the player from WASD
+        Vector2 newMousePos = cam.ScreenToWorldPoint(Input.mousePosition);
+        
+        // let server know about position and rotation client changes
+        if (newPos != position || mousePos != newMousePos) // gets the mouse position)
+        {
+            Vector2 lookDir = mousePos - body.position; // calculates the vector from the player to the mouse
+            float angle = Mathf.Atan2(lookDir.y, lookDir.x) * Mathf.Rad2Deg - 90f; // calculates the angle from the player to the mouse
+            body.rotation = angle;
+            position = newPos;
+            UpdateClientPositionAndRotationServerRpc(newPos * PStats[2], newMousePos);
+        }
     }
     void shooting()
     {
@@ -58,8 +83,15 @@ public class PlayerController : MonoBehaviour
             bull.GetComponent<Bullet>().setDMG(PStats[1]);
             bullbody.AddForce(firePoint.up * PStats[3], ForceMode2D.Impulse);
         }
-        mousePos = cam.ScreenToWorldPoint(Input.mousePosition);
     }
+
+    [ServerRpc]
+    public void UpdateClientPositionAndRotationServerRpc(Vector2 newPosition, Vector2 newRotation)
+    {
+        networkPositionDirection.Value = newPosition;
+        networkRotationDirection.Value = newRotation;
+    }
+
     public void damage(float dmg)
     {
         PStats[0] -= dmg;
