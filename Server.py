@@ -17,7 +17,6 @@ def client_connection(c, c_address):
         if data != "":
             data = data.split('|')
             if data[0] == "VERIFY":
-                print(data)
                 try:
                     if tries > 0 and not logged_in:
                         logged_in = verify(data[1], c, a, tries)
@@ -25,7 +24,6 @@ def client_connection(c, c_address):
                 except Exception as exc:
                     c.send(("An Error Occurred " + str(type(exc)) + str(exc)).encode())
             elif data[0] == 'REGISTER' and not logged_in:
-                print(data)
                 data = data[1].split('#')
                 try:
                     a = register(data[0], data[1], data[2])
@@ -33,7 +31,6 @@ def client_connection(c, c_address):
                 except Exception as exc:
                     c.send(("An Error Occurred "+str(type(exc)) + str(exc)).encode())
             elif data[0] == 'LOGIN' and not logged_in:
-                print(data)
                 data = data[1].split('#')
                 try:
                     a = login(data[0], data[1], c)
@@ -42,10 +39,8 @@ def client_connection(c, c_address):
                 except Exception as exc:
                     c.send(("An Error Occurred "+str(type(exc)) + str(exc)).encode())
             elif data[0] == 'START':
-                print(data)
                 c.send("Accepted".encode())
             elif data[0] == 'HOST' and logged_in:
-                print(data)
                 data = data[1].split('#')
                 try:
                     host(c_address, data[0], data[1], data[2])
@@ -53,18 +48,16 @@ def client_connection(c, c_address):
                 except Exception as exc:
                     c.send(("An Error Occurred "+str(type(exc)) + str(exc)).encode())
             elif data[0] == 'REFRESH' and logged_in:
-                print(data)
                 try:
                     c.send("Accepted".encode())
                     refresh(c)
                 except Exception as exc:
                     c.send(("An Error Occurred "+str(type(exc)) + str(exc)).encode())
             elif data[0] == 'JOIN' and logged_in:
-                print(data)
                 data = data[1].split('#')
                 try:
                     c.send("Accepted".encode())
-                    join(data[0], data[1], c)
+                    join(data[0], data[1], c, c_address)
                 except Exception as exc:
                     c.send(("An Error Occurred "+str(type(exc)) + str(exc)).encode())
             elif data[0] == 'CLOSE':
@@ -111,7 +104,7 @@ def register(name, password, email):
         smtp.ehlo()
         crsr.execute("SELECT Email FROM USERS WHERE Name = ?", (name,))
         email = crsr.fetchall()[0][0]
-        # smtp.login("revengeofthedreamers3@gmail.com", "R3V3NG30fTh3Dr3m3rs")
+        smtp.login("revengeofthedreamers3@gmail.com", "R3V3NG30fTh3Dr3m3rs")
 
         a = random.randint(1000, 10000)
 
@@ -120,7 +113,7 @@ def register(name, password, email):
 
         msg = f'Subject: {subject}\n\n{body}'
 
-        # smtp.sendmail("revengeofthedreamers3@gmail.com", email, msg)
+        smtp.sendmail("revengeofthedreamers3@gmail.com", email, msg)
         return a
 
 
@@ -151,11 +144,11 @@ def refresh(c):
     c.send(str_send.encode())
 
 
-def join(name, password, c):
+def join(name, password, c, c_address):
     global host_list, s
     if host_list[name][0] == password:
         print(host_list[name][3])
-        c.send(str(host_list[name][3]).encode())
+        c.send(str(host_list[name][3] + "#" + str(c_address)).encode())
     else:
         c.send('0'.encode())
 

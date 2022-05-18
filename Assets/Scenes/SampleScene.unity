@@ -3753,7 +3753,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!61 &1118134312
 BoxCollider2D:
@@ -3874,7 +3874,6 @@ GameObject:
   - component: {fileID: 1329603844}
   - component: {fileID: 1329603843}
   - component: {fileID: 1329603842}
-  - component: {fileID: 1329603847}
   m_Layer: 0
   m_Name: Slime Enemy 1
   m_TagString: Enemy
@@ -4023,36 +4022,11 @@ Transform:
   m_LocalPosition: {x: 11.4, y: 1.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 1871529436}
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1329603847
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1329603841}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  SyncPositionX: 1
-  SyncPositionY: 1
-  SyncPositionZ: 1
-  SyncRotAngleX: 1
-  SyncRotAngleY: 1
-  SyncRotAngleZ: 1
-  SyncScaleX: 1
-  SyncScaleY: 1
-  SyncScaleZ: 1
-  PositionThreshold: 0.001
-  RotAngleThreshold: 0.01
-  ScaleThreshold: 0.01
-  InLocalSpace: 0
-  Interpolate: 1
 --- !u!850595691 &1526319225
 LightingSettings:
   m_ObjectHideFlags: 0
@@ -6556,8 +6530,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1871529435}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 4.9172688, y: 1.0729659, z: -37.49908}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -6.482731, y: -0.42703414, z: -37.49908}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -6565,8 +6539,8 @@ Transform:
   - {fileID: 302396432}
   - {fileID: 981877654}
   - {fileID: 2045233495}
-  m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_Father: {fileID: 1329603846}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2045233494
 GameObject:
@@ -6694,6 +6668,7 @@ GameObject:
   - component: {fileID: 1698477987646262328}
   - component: {fileID: 1698477987646262333}
   - component: {fileID: 1698477987646262334}
+  - component: {fileID: 1698477987646262337}
   m_Layer: 10
   m_Name: Player1
   m_TagString: Player
@@ -6773,6 +6748,26 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1698477987646262337
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1698477987646262329}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c00caf1ddf2b194eb9a4119564b9379, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  PStats:
+  - 100
+  - 10
+  - 5
+  - 20
+  - 1
+  firePoint: {fileID: 1698477987377669879}
+  bullet: {fileID: 8395240225586697879, guid: 0a08cf0bee4b3db468604594c8f56dc6, type: 3}
 --- !u!60 &2614150877231453516
 PolygonCollider2D:
   m_ObjectHideFlags: 0

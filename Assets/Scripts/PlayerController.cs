@@ -1,10 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Unity.Netcode;
-
-[RequireComponent(typeof(NetworkObject))]
-public class PlayerController : NetworkBehaviour
+public class PlayerController : MonoBehaviour
 {
     // General Variables
     Camera cam;
@@ -23,11 +20,6 @@ public class PlayerController : NetworkBehaviour
     public Transform firePoint;
     public GameObject bullet;
 
-    [SerializeField]
-    private NetworkVariable<Vector2> networkPositionDirection = new NetworkVariable<Vector2>();
-
-    [SerializeField]
-    private NetworkVariable<Vector2> networkRotationDirection = new NetworkVariable<Vector2>();
 
     void Start()
     {
@@ -37,25 +29,14 @@ public class PlayerController : NetworkBehaviour
     }
 
     void Update()
-    {
-        if (IsOwner && IsClient)
-        {
-            movement();
-            shooting();
-        }
-        else
-        {
-
-        }
+    {    
+        movement();
+        shooting();
     }
 
     private void FixedUpdate()
     {
-        if (IsOwner && IsClient)
-        {
-            body.MovePosition(body.position + position * PStats[2] * Time.fixedDeltaTime); //moves the player
-        }
-        
+        body.MovePosition(body.position + position * PStats[2] * Time.fixedDeltaTime); //moves the player 
     }
 
     void movement()
@@ -66,11 +47,11 @@ public class PlayerController : NetworkBehaviour
         // let server know about position and rotation client changes
         if (newPos != position || mousePos != newMousePos) // gets the mouse position)
         {
+            mousePos = newMousePos;
             Vector2 lookDir = mousePos - body.position; // calculates the vector from the player to the mouse
             float angle = Mathf.Atan2(lookDir.y, lookDir.x) * Mathf.Rad2Deg - 90f; // calculates the angle from the player to the mouse
             body.rotation = angle;
             position = newPos;
-            UpdateClientPositionAndRotationServerRpc(newPos * PStats[2], newMousePos);
         }
     }
     void shooting()
@@ -85,12 +66,6 @@ public class PlayerController : NetworkBehaviour
         }
     }
 
-    [ServerRpc]
-    public void UpdateClientPositionAndRotationServerRpc(Vector2 newPosition, Vector2 newRotation)
-    {
-        networkPositionDirection.Value = newPosition;
-        networkRotationDirection.Value = newRotation;
-    }
 
     public void damage(float dmg)
     {

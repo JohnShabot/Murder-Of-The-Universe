@@ -62,6 +62,11 @@ public class UIManager : MonoBehaviour
         }
         
     }
+    public void ChangeP2Name(string userName)
+    {
+        GameObject P2 = GameObject.Find("P2");
+        P2.GetComponentInChildren<Text>().text = "P2: " + UserName;
+    }
     public void RefreshRooms()
     {
         int i = 0;
