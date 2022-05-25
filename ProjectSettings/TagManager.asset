@@ -7,6 +7,8 @@ TagManager:
   - Enemy
   - Item
   - Manager
+  - ServerControledPlayer
+  - ClientControledPlayer
   layers:
   - Default
   - TransparentFX

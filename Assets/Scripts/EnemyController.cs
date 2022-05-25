@@ -15,12 +15,12 @@ public class EnemyController : MonoBehaviour
 
     float HP = 50f;
     float attack = 10f;
-    public float speed = 3f;
-    public float Range = 5f;
+    float speed = 3f;
+    float Range = 5f;
 
     float Distance;
     private float Wait;
-    public float StartWait = 500f;
+    float StartWait = 500f;
     int InvFrame = 0;
     bool firsthit = false;
     public Transform[] MoveSpots;
@@ -91,7 +91,8 @@ public class EnemyController : MonoBehaviour
 
         if (collision.collider.tag == "Player" && InvFrame >= 100)
         {
-            GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().damage(attack);
+            if (collision.gameObject.Equals(GameManager.instance.Players[NetworkManager.instance.myId]))
+                collision.gameObject.GetComponent<PlayerController>().damage(attack);
             InvFrame = 0;
         }
     }
@@ -105,7 +106,8 @@ public class EnemyController : MonoBehaviour
         }
         if (collision.collider.tag == "Player" && InvFrame >= 100)
         {
-            GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().damage(attack);
+            if(collision.gameObject.Equals(GameManager.instance.Players[NetworkManager.instance.myId]))
+                collision.gameObject.GetComponent<PlayerController>().damage(attack);
             InvFrame = 0;
         }
     }

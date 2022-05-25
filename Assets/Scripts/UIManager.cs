@@ -1,9 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 public class UIManager : MonoBehaviour
 {
+    public static UIManager instance;
     public Canvas[] screens;
     public GameObject LabelTemplate;
     public GameObject RoomsSection;
@@ -13,6 +15,15 @@ public class UIManager : MonoBehaviour
     private string UserName;
     List<GameObject> roomLabels;
 
+    private void Awake()
+    {
+        if (instance == null) instance = this;
+        else if (instance != this)
+        {
+            Debug.Log("Instance Already Exists, Destroying");
+            Destroy(this);
+        }
+    }
     private void Start()
     {
         passwordPanel.SetActive(false);
@@ -22,6 +33,29 @@ public class UIManager : MonoBehaviour
             else s.enabled = false;
         }
         roomLabels = new List<GameObject>();
+    }
+
+    public void ReadyRecieved(string P)
+    {
+        GameObject P2 = GameObject.Find($"{P} Name");
+        P2.GetComponent<Text>().text += "- READY!";
+    }
+    public void ReadyClick()
+    {
+        GameObject readyButton = GameObject.Find("Ready Button");
+        readyButton.GetComponent<Button>().enabled = false;
+        if (!NetworkManager.instance.isServer.Value)
+        {
+            ClientSend.ready();
+            GameManager.instance.readyC();
+
+        }
+        else if (NetworkManager.instance.isServer.Value)
+        {
+            ServerSend.ready();
+            GameManager.instance.readyS();
+        }
+
     }
     public void ChangeScreen(string changeTo)
     {
@@ -33,7 +67,7 @@ public class UIManager : MonoBehaviour
     }
     public void ExitGame()
     {
-        gameObject.GetComponent<ServerManager>().CloseConnectionMain();
+        NetworkManager.instance.CloseConnectionMain();
         Application.Quit();
     }
 
@@ -52,20 +86,23 @@ public class UIManager : MonoBehaviour
         pass = texts[1];
         if(name.text != "")
         {
-            if(pass.text != "") gameObject.GetComponent<ServerManager>().Host(name.text, pass.text, UserName);
-            else gameObject.GetComponent<ServerManager>().Host(name.text, "", UserName);
+            if(pass.text != "") NetworkManager.instance.Host(name.text, pass.text, UserName);
+            else NetworkManager.instance.Host(name.text, "", UserName);
             texts[0].text = "";
             texts[1].text = "";
-            GameObject P1 = GameObject.Find("P1");
-            P1.GetComponentInChildren<Text>().text = "P1: " + UserName;
-            ChangeScreen("Room");
+            ChangeP1Name(UserName);
         }
         
     }
-    public void ChangeP2Name(string userName)
+    public void ChangeP2Name(string PName)
     {
-        GameObject P2 = GameObject.Find("P2");
-        P2.GetComponentInChildren<Text>().text = "P2: " + UserName;
+        GameObject P2 = GameObject.Find("P2 Name");
+        P2.GetComponent<Text>().text = "P2: " + PName;
+    }
+    public void ChangeP1Name(string PName)
+    {
+        GameObject P1 = GameObject.Find("P1 Name");
+        P1.GetComponent<Text>().text = "P1: " + PName;
     }
     public void RefreshRooms()
     {
@@ -78,7 +115,7 @@ public class UIManager : MonoBehaviour
                 i++;
             }
         }
-        string roomsStr = gameObject.GetComponent<ServerManager>().RefreshList();
+        string roomsStr = NetworkManager.instance.RefreshList();
         string[] roomsLst = roomsStr.Split('#');
         roomLabels = new List<GameObject>();
         int topY = 800;
@@ -106,10 +143,11 @@ public class UIManager : MonoBehaviour
     }
     public void ConnectToRoom()
     {
-        gameObject.GetComponent<ServerManager>().ConnectToHost(currRoom, passwordPanel.GetComponentInChildren<InputField>().text);
+        NetworkManager.instance.ConnectToHost(currRoom, passwordPanel.GetComponentInChildren<InputField>().text);
         ChangeScreen("Room");
         passwordPanel.GetComponentInChildren<InputField>().text = "";
         passwordPanel.SetActive(false);
+        ChangeP2Name(NetworkManager.instance.username);
         
     }
 
@@ -121,7 +159,7 @@ public class UIManager : MonoBehaviour
         GameObject lbl = GameObject.Find("Invalid Details SU");
         if (texts[2].text == texts[3].text)
         {
-            gameObject.GetComponent<ServerManager>().Register(texts[0].text, texts[1].text, texts[2].text);
+            NetworkManager.instance.Register(texts[0].text, texts[1].text, texts[2].text);
             ChangeScreen("Two Factor Auth");    
         }
         else
@@ -139,8 +177,7 @@ public class UIManager : MonoBehaviour
         Canvas LoginScreen = screens[2];
         InputField[] texts = LoginScreen.GetComponentsInChildren<InputField>();
         GameObject lbl = GameObject.Find("Invalid Details LI");
-        int s = gameObject.GetComponent<ServerManager>().Login(texts[0].text, texts[1].text);
-        Debug.Log("func result: " + s);
+        int s = NetworkManager.instance.Login(texts[0].text, texts[1].text);
         if (s == 1)
         {
             UserName = texts[0].text;
@@ -160,7 +197,7 @@ public class UIManager : MonoBehaviour
         Canvas verifyRoom = screens[4];
         InputField text = verifyRoom.GetComponentInChildren<InputField>();
         GameObject lbl = GameObject.Find("Invalid Details 2FA");
-        int s = gameObject.GetComponent<ServerManager>().Verify(text.text);
+        int s = NetworkManager.instance.Verify(text.text);
         if (s == 1)
         {
             ChangeScreen("Room Selector");

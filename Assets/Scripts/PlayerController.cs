@@ -8,7 +8,6 @@ public class PlayerController : MonoBehaviour
     Rigidbody2D body;
     Vector2 position;
     Vector2 mousePos;
-    bool isP1;
 
     // Item List
     LinkedList<Item> itemList;
@@ -17,15 +16,25 @@ public class PlayerController : MonoBehaviour
     public float[] PStats = new float[5];
 
     //Scene Dependant Objects
-    public Transform firePoint;
-    public GameObject bullet;
+    Transform firePoint;
+    GameObject bullet;
 
-
+    public void Initialize(GameObject bullPrefab)
+    {
+        bullet = bullPrefab;
+    }
     void Start()
     {
         body = GetComponent<Rigidbody2D>();
         cam = Camera.FindObjectOfType<Camera>();
         itemList = new LinkedList<Item>();
+        foreach (Transform t in this.GetComponentsInChildren<Transform>())
+        {
+            if (t != this.transform)
+            {
+                firePoint = t;
+            }
+        }
     }
 
     void Update()
@@ -37,15 +46,24 @@ public class PlayerController : MonoBehaviour
     private void FixedUpdate()
     {
         body.MovePosition(body.position + position * PStats[2] * Time.fixedDeltaTime); //moves the player 
+        if (NetworkManager.instance.isServer.Value)
+        {
+            ServerSend.updatePosRot(body.position, body.rotation);
+        }
+        else if (!NetworkManager.instance.isServer.Value)
+        {
+            ClientSend.updatePosRot(body.position, body.rotation);
+        }
     }
 
     void movement()
     {
         Vector2 newPos = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical")); // gets the movement of the player from WASD
-        Vector2 newMousePos = cam.ScreenToWorldPoint(Input.mousePosition);
-        
+        Vector2 newMousePos = cam.ScreenToWorldPoint(Input.mousePosition); // gets the mouse position
+
+
         // let server know about position and rotation client changes
-        if (newPos != position || mousePos != newMousePos) // gets the mouse position)
+        if (newPos != position || mousePos != newMousePos) 
         {
             mousePos = newMousePos;
             Vector2 lookDir = mousePos - body.position; // calculates the vector from the player to the mouse
@@ -63,6 +81,14 @@ public class PlayerController : MonoBehaviour
             bull.GetComponent<Bullet>().SetCameFrom(gameObject);
             bull.GetComponent<Bullet>().setDMG(PStats[1]);
             bullbody.AddForce(firePoint.up * PStats[3], ForceMode2D.Impulse);
+            if (NetworkManager.instance.isServer.Value)
+            {
+                ServerSend.shoot();
+            }
+            else if (!NetworkManager.instance.isServer.Value)
+            {
+                ClientSend.shoot();
+            }
         }
     }
 
@@ -90,5 +116,9 @@ public class PlayerController : MonoBehaviour
                 this.PStats[i] += it.getStatChange()[i];
             }
         }
+    }
+    void OnDestroy()
+    {
+        Debug.Log("Destroying Player");
     }
 }

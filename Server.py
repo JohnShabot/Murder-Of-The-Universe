@@ -56,9 +56,10 @@ def client_connection(c, c_address):
             elif data[0] == 'JOIN' and logged_in:
                 data = data[1].split('#')
                 try:
-                    c.send("Accepted".encode())
                     join(data[0], data[1], c, c_address)
+                    c.send("Accepted".encode())
                 except Exception as exc:
+                    print("An Error Occurred "+str(type(exc)) + str(exc))
                     c.send(("An Error Occurred "+str(type(exc)) + str(exc)).encode())
             elif data[0] == 'CLOSE':
                 close(c)
@@ -148,7 +149,7 @@ def join(name, password, c, c_address):
     global host_list, s
     if host_list[name][0] == password:
         print(host_list[name][3])
-        c.send(str(host_list[name][3] + "#" + str(c_address)).encode())
+        c.send((str(host_list[name][3]) + "#" + str(c_address)).encode())
     else:
         c.send('0'.encode())
 
@@ -163,7 +164,6 @@ def start_server():
     print('server started')
     s.listen(999)
     t = []
-
     while True:
         try:
             print("listening")
