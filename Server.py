@@ -82,8 +82,8 @@ def login(name, password, c):
             email = crsr.fetchall()[0][0]
             # smtp.login("revengeofthedreamers3@gmail.com", "R3V3NG30fTh3Dr3m3rs")
 
-            a = random.randint(1000, 10000)
-
+            # a = random.randint(1000, 10000)
+            a = 1
             subject = 'Confirmation Code'
             body = "Hello,\nThe verification code is: " + str(a) + "\nHave Fun!"
 

@@ -55,7 +55,6 @@ public class ServerSend
             SendTCPData(toClient, _packet);
         }
     }
-
     public static void ready()
     {
         using (Packet _packet = new Packet((int)ServerPackets.ready))
@@ -63,16 +62,44 @@ public class ServerSend
             SendTCPDataToAll(_packet);
         }
     }
-
-    public static void spawnEnemy(Vector2 pos, int EnemyType)
+    public static void spawnEnemy(Vector2 pos, string EnemyType)
     {
-        using (Packet _packet = new Packet((int)ServerPackets.welcome))
+        using (Packet _packet = new Packet((int)ServerPackets.spawnEnemy))
         {
             _packet.Write(pos);
             _packet.Write(EnemyType);
             SendTCPDataToAll(_packet);
         }
     }
+    public static void spawnitem(int ItemType)
+    {
+        using (Packet _packet = new Packet((int)ServerPackets.spawnItem))
+        {
+            _packet.Write(ItemType);
+            SendTCPDataToAll(_packet);
+            Debug.Log("so far so good");
+        }
+    }
+    public static void damageEnemy(int id, float dmg)
+    {
+        using (Packet _packet = new Packet((int)ServerPackets.damageEnemy))
+        {
+            _packet.Write(id);
+            _packet.Write(dmg);
+            SendTCPDataToAll(_packet);
+        }
+    }
+    public static void damagePlayer(int id, float dmg)
+    {
+        using (Packet _packet = new Packet((int)ServerPackets.damagePlayer))
+        {
+            _packet.Write(id);
+            _packet.Write(dmg);
+            SendTCPDataToAll(id, _packet);
+        }
+    }
+
+
 
     public static void udpTest(int toClient)
     {
@@ -92,10 +119,11 @@ public class ServerSend
             SendUDPDataToAll(_packet);
         }
     }
-    public static void updateEnemyPos(Vector2 pos, float rot)
+    public static void updateEnemyPos(int id, Vector2 pos, float rot)
     {
         using (Packet _packet = new Packet((int)ServerPackets.updateEnemyPos))
         {
+            _packet.Write(id);
             _packet.Write(pos);
             _packet.Write(rot);
             SendUDPDataToAll(_packet);
@@ -106,6 +134,15 @@ public class ServerSend
         using (Packet _packet = new Packet((int)ServerPackets.shoot))
         {
             SendUDPDataToAll(_packet);
+        }
+    }
+    public static void addItem(int PID, int IID)
+    {
+        using (Packet _packet = new Packet((int)ServerPackets.addItem))
+        {
+            _packet.Write(PID);
+            _packet.Write(IID);
+            SendTCPDataToAll(PID, _packet);
         }
     }
     #endregion

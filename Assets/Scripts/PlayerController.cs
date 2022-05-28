@@ -100,7 +100,16 @@ public class PlayerController : MonoBehaviour
         if(PStats[0]<= 0)
         {
             Debug.Log("P1 Died");
+            GameManager.instance.Players.Remove(NetworkManager.instance.myId);
             Destroy(this.gameObject);
+        }
+        if (NetworkManager.instance.isServer.Value)
+        {
+            ServerSend.damagePlayer(0, dmg);
+        }
+        else if (!NetworkManager.instance.isServer.Value)
+        {
+            ClientSend.damagePlayer(dmg);
         }
     }
     void OnTriggerEnter2D(Collider2D c)
@@ -108,12 +117,15 @@ public class PlayerController : MonoBehaviour
         if (c.gameObject.tag == "Item")
         {
             Item it = c.gameObject.GetComponent<ItemPickup>().GetItem();
+            if (NetworkManager.instance.isServer.Value) ServerSend.addItem(NetworkManager.instance.myId, GameManager.instance.getItemID(it));
+            if (!NetworkManager.instance.isServer.Value) ClientSend.addItem(GameManager.instance.getItemID(it));
+
             Debug.Log("Gathered New Item");
             itemList.AddLast(it);
-            GameObject.Destroy(c.gameObject);
+            GameManager.instance.DestroyItem(c.gameObject);
             for (int i = 0; i < 5; i++)
             {
-                this.PStats[i] += it.getStatChange()[i];
+                PStats[i] += it.getStatChange()[i];
             }
         }
     }

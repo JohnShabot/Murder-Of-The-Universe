@@ -3703,6 +3703,14 @@ MonoBehaviour:
     type: 3}
   BulletPrefab: {fileID: 8395240225586697879, guid: 0a08cf0bee4b3db468604594c8f56dc6,
     type: 3}
+  cam: {fileID: 371901950}
+  EnemyPrefabs:
+  - {fileID: 7242639175571429552, guid: 575a325f21f8e70409c1024131733391, type: 3}
+  - {fileID: 8560683037519802174, guid: 4609022f535e68541a81be6ba18d5427, type: 3}
+  - {fileID: 6746093709436003377, guid: 26f7279d09b001641b7933f2ab6777c8, type: 3}
+  - {fileID: 9120999599884600094, guid: c1cd11bd328bb1747be22a8cff6f55ba, type: 3}
+  ItemPrefabs:
+  - {fileID: 4587674892022630759, guid: c8a5234be969569449e56f2acf811881, type: 3}
 --- !u!1 &876458245
 GameObject:
   m_ObjectHideFlags: 0

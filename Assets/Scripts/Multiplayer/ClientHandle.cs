@@ -4,7 +4,7 @@ using System.Net;
 using System.Net.Sockets;
 using UnityEngine;
 
-public class ClientHandle : MonoBehaviour
+public class ClientHandle
 {
     public static void welcome(Packet packet)
     {
@@ -39,10 +39,38 @@ public class ClientHandle : MonoBehaviour
     }
     public static void spawnEnemy(Packet packet)
     {
-
+        GameManager.instance.SpawnEnemy(packet.ReadVector2(), packet.ReadString());
+    }
+    public static void spawnItem(Packet packet)
+    {
+        GameManager.instance.SpawnItem(packet.ReadInt());
     }
     public static void updateEnemyPos(Packet packet)
     {
-
+        int enemyID = packet.ReadInt();
+        Vector2 pos = packet.ReadVector2();
+        float rot = packet.ReadFloat();
+        GameObject e = GameManager.instance.getCurrentEnemies()[enemyID];
+        e.GetComponent<EnemyServerController>().UpdatePosRot(pos, rot);
+    }
+    public static void damageEnemy(Packet packet)
+    {
+        GameObject e = GameManager.instance.getCurrentEnemies()[packet.ReadInt()];
+        e.GetComponent<EnemyServerController>().damage(packet.ReadFloat());
+    }
+    public static void damagePlayer(Packet packet)
+    {
+        GameObject p = GameManager.instance.Players[packet.ReadInt()];
+        p.GetComponent<PlayerServerController>().damage(packet.ReadFloat());
+    }
+    public static void addItem(Packet packet)
+    {
+        GameObject p = GameManager.instance.Players[packet.ReadInt()];
+        p.GetComponent<PlayerServerController>().AddItem(GameManager.instance.ItemTypes[packet.ReadInt()]);
+    }
+    public static void removeItem(Packet packet)
+    {
+        GameObject p = GameManager.instance.Players[packet.ReadInt()];
+        p.GetComponent<PlayerServerController>().RemoveItem(GameManager.instance.ItemTypes[packet.ReadInt()].GetComponent<ItemPickup>().item);
     }
 }

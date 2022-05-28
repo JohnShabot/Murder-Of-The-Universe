@@ -34,4 +34,18 @@ public class ServerHandle
     {
         GameManager.instance.Players[fromClient].GetComponent<PlayerServerController>().Shoot();
     }
+    public static void damagePlayer(int fromClient, Packet packet)
+    {
+        GameManager.instance.Players[fromClient].GetComponent<PlayerServerController>().damage(packet.ReadFloat());
+    }
+    public static void addItem(int fromClient, Packet packet)
+    {
+        GameObject p = GameManager.instance.Players[fromClient];
+        p.GetComponent<PlayerServerController>().AddItem(GameManager.instance.ItemTypes[packet.ReadInt()]);
+    }
+    public static void removeItem(int fromClient, Packet packet)
+    {
+        GameObject p = GameManager.instance.Players[fromClient];
+        p.GetComponent<PlayerServerController>().RemoveItem(GameManager.instance.ItemTypes[packet.ReadInt()].GetComponent<ItemPickup>().item);
+    }
 }

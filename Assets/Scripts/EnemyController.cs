@@ -11,6 +11,8 @@ enum attackType
 }
 public class EnemyController : MonoBehaviour
 {
+    int myID;
+
     attackType at;
 
     float HP = 50f;
@@ -18,20 +20,23 @@ public class EnemyController : MonoBehaviour
     float speed = 3f;
     float Range = 5f;
 
-    float Distance;
-    private float Wait;
-    float StartWait = 500f;
+    private float wait;
+    float startWait = 3;
     int InvFrame = 0;
     bool firsthit = false;
-    public Transform[] MoveSpots;
+    List<Transform> MoveSpots;
 
     private int randomSpots;
 
     void Start()
     {
-
-        Wait = StartWait;
-        randomSpots = Random.Range(0, MoveSpots.Length);
+        MoveSpots = new List<Transform>();
+        foreach (Transform t in GameObject.Find("Enemy Patrol Points").GetComponentsInChildren<Transform>())
+        {
+            MoveSpots.Add(t);
+        }
+        wait = startWait;
+        randomSpots = Random.Range(0, MoveSpots.ToArray().Length);
     }
     private void FixedUpdate()
     {
@@ -41,18 +46,29 @@ public class EnemyController : MonoBehaviour
     {
         try
         {
-
-            Distance = Vector2.Distance(transform.position, GameObject.FindWithTag("Player").transform.position);
-
-            if (Distance < Range)
+            Rigidbody2D body = this.GetComponent<Rigidbody2D>();
+            float minD = Vector2.Distance(transform.position, GameManager.instance.Players[0].transform.position);
+            int id = 0;
+            foreach (int i in GameManager.instance.Players.Keys)
             {
-                Chase();
+                float d = Vector2.Distance(transform.position, GameManager.instance.Players[i].transform.position);
+                if (d < minD)
+                {
+                    minD = d;
+                    id = i;
+                }
+            }
+
+            if (minD < Range)
+            {
+                Chase(id);
             }
 
             else
             {
                 PatrolNext();
             }
+            ServerSend.updateEnemyPos(myID ,body.position, body.rotation);
         }
         catch
         {
@@ -62,24 +78,29 @@ public class EnemyController : MonoBehaviour
 
     void PatrolNext()
     {
+        Debug.Log(wait);
         transform.position = Vector2.MoveTowards(transform.position, MoveSpots[randomSpots].position, speed * Time.deltaTime); // moves the enemy the a desired pos //
-
+        Vector2 lookDir = MoveSpots[randomSpots].position - transform.position; // calculates the vector from the player to the mouse
+        float angle = Mathf.Atan2(lookDir.y, lookDir.x) * Mathf.Rad2Deg - 90f; // calculates the angle from the player to the mouse
+        this.GetComponent<Rigidbody2D>().rotation = angle;
         if (Vector2.Distance(transform.position, MoveSpots[randomSpots].position) < 0.2f)
         {
-            if (Wait <= 0)
+            if (wait <= 0)
             {
-                randomSpots = Random.Range(0, MoveSpots.Length);
-                Wait = StartWait;
+                randomSpots = Random.Range(0, MoveSpots.ToArray().Length);
+                wait = startWait;
             }
-            else Wait -= Time.deltaTime;
+            else wait -= Time.deltaTime;
         }
     }
 
 
-    void Chase()
+    void Chase(int id)
     {
-        transform.position = Vector2.MoveTowards(transform.position, GameObject.FindGameObjectWithTag("Player").transform.position, speed * Time.deltaTime);
-
+        transform.position = Vector2.MoveTowards(transform.position, GameManager.instance.Players[id].transform.position, speed * Time.deltaTime);
+        Vector2 lookDir = GameManager.instance.Players[id].transform.position - transform.position; // calculates the vector from the player to the mouse
+        float angle = Mathf.Atan2(lookDir.y, lookDir.x) * Mathf.Rad2Deg - 90f; // calculates the angle from the player to the mouse
+        this.GetComponent<Rigidbody2D>().rotation = angle;
     }
     void OnCollisionEnter2D(Collision2D collision)
     {
@@ -120,5 +141,11 @@ public class EnemyController : MonoBehaviour
             Destroy(gameObject);
             Debug.Log("Enemy Died");
         }
+        ServerSend.damageEnemy(myID,dmg);
+    }
+
+    public void setID(int id)
+    {
+        this.myID = id;
     }
 }

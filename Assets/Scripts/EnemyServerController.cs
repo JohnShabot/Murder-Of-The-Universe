@@ -4,20 +4,26 @@ using UnityEngine;
 
 public class EnemyServerController : MonoBehaviour
 {
+    attackType at;
+
     float HP = 50f;
-    float attack = 10f;
-    private float Wait;
-    bool firsthit = false;
 
 
-    void Start()
+    public void UpdatePosRot(Vector2 position, float rotation)
     {
-        
+        Rigidbody2D body = this.GetComponent<Rigidbody2D>();
+        body.position = position;
+        body.rotation = rotation;
     }
 
-    // Update is called once per frame
-    void Update()
+    public void damage(float dmg)
     {
-        
+        Debug.Log("Enemy Took Damage: " + dmg);
+        HP -= dmg;
+        if (HP <= 0)
+        {
+            Destroy(gameObject);
+            Debug.Log("Enemy Died");
+        }
     }
 }

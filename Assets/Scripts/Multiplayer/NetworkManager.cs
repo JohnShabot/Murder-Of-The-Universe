@@ -68,10 +68,12 @@ public class NetworkManager : MonoBehaviour
             { (int)ServerPackets.updatePosRot, ClientHandle.updatePosRot },
             { (int)ServerPackets.shoot, ClientHandle.shoot },
             { (int)ServerPackets.spawnEnemy, ClientHandle.spawnEnemy },
-            { (int)ServerPackets.updateEnemyPos, ClientHandle.updateEnemyPos }
-
-            //{ (int)ServerPackets.addItem, CliantHandle.addItem },
-            //{ (int)ServerPackets.removeItem, CliantHandle.removeItem }
+            { (int)ServerPackets.updateEnemyPos, ClientHandle.updateEnemyPos },
+            { (int)ServerPackets.damageEnemy, ClientHandle.damageEnemy },
+            { (int)ServerPackets.damagePlayer, ClientHandle.damagePlayer },
+            { (int)ServerPackets.spawnItem, ClientHandle.spawnItem },
+            { (int)ServerPackets.addItem, ClientHandle.addItem },
+            { (int)ServerPackets.removeItem, ClientHandle.removeItem }
 
         };
         Debug.Log("initialized Packets");

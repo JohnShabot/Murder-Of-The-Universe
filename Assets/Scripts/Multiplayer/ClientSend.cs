@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ClientSend : MonoBehaviour
+public class ClientSend
 {
     private static void SendTCPData(Packet packet)
     {
@@ -34,7 +34,15 @@ public class ClientSend : MonoBehaviour
 
             SendUDPData(_packet);
         }
-    } 
+    }
+    public static void damagePlayer(float dmg)
+    {
+        using (Packet _packet = new Packet((int)ServerPackets.damagePlayer))
+        {
+            _packet.Write(dmg);
+            SendTCPData(_packet);
+        }
+    }
     public static void ready()
     {
         using (Packet _packet = new Packet((int)ClientPackets.ready))
@@ -56,6 +64,14 @@ public class ClientSend : MonoBehaviour
         using (Packet _packet = new Packet((int)ClientPackets.shoot))
         {
             SendUDPData(_packet);
+        }
+    }
+    public static void addItem(int IID)
+    {
+        using (Packet _packet = new Packet((int)ClientPackets.addItem))
+        {
+            _packet.Write(IID);
+            SendTCPData(_packet);
         }
     }
     #endregion

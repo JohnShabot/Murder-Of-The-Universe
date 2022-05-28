@@ -11,11 +11,14 @@ public enum ServerPackets
     udpTest,
     ready,
     updatePosRot,
+    damagePlayer,
     addItem,
     removeItem,
+    spawnItem,
     shoot,
     spawnEnemy,
-    updateEnemyPos
+    updateEnemyPos,
+    damageEnemy,
 }
 
 /// <summary>Sent from client to server.</summary>
@@ -27,7 +30,8 @@ public enum ClientPackets
     updatePosRot,
     addItem,
     removeItem,
-    shoot
+    shoot,
+    damagePlayer,
 }
 
 public class Packet : IDisposable

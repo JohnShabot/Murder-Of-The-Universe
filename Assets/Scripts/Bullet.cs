@@ -23,7 +23,10 @@ public class Bullet : MonoBehaviour
                 Debug.Log("Don't Hit ME");
                 break;
             case "Enemy":
-                col.gameObject.GetComponent<EnemyController>().damage(dmg);
+                if (NetworkManager.instance.isServer.Value)
+                {
+                    col.gameObject.GetComponent<EnemyController>().damage(dmg);
+                }
                 break;
         }
         Destroy(gameObject);

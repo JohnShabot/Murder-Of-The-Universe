@@ -40,14 +40,15 @@ public class PlayerServerController : MonoBehaviour
         body.rotation = rotation;
     }
 
-    public void AddItem(Item item)
+    public void AddItem(GameObject item)
     {
-        if (!itemList.Contains(item))
+        if (!itemList.Contains(item.GetComponent<ItemPickup>().item))
         {
-            itemList.AddLast(item);
+            GameManager.instance.DestroyItem(item);
+            itemList.AddLast(item.GetComponent<ItemPickup>().item);
             for (int i = 0; i < 5; i++)
             {
-                this.PStats[i] += item.getStatChange()[i];
+                this.PStats[i] += item.GetComponent<ItemPickup>().item.getStatChange()[i];
             }
         }
     }
@@ -76,8 +77,15 @@ public class PlayerServerController : MonoBehaviour
         bull.GetComponent<Bullet>().setDMG(PStats[1]);
         bullbody.AddForce(firePoint.up * PStats[3], ForceMode2D.Impulse);
     }
-    void OnDestroy()
+
+    public void damage(float dmg)
     {
-        Debug.Log("Destroying Player");
+        PStats[0] -= dmg;
+        Debug.Log("P1 Took Damage: " + dmg);
+        if (PStats[0] <= 0)
+        {
+            Debug.Log("P1 Died");
+            Destroy(this.gameObject);
+        }
     }
 }

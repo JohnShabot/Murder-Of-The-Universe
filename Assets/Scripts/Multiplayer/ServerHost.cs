@@ -96,11 +96,9 @@ public class ServerHost
     {
         try
         {
-            Debug.Log($"Sending Data To {clientEP}");
             if(clientEP != null)
             {
                 UdpListener.BeginSend(packet.ToArray(), packet.Length(), clientEP ,null, null);
-                Debug.Log("Sent!");
             }
         }
         catch(Exception ex)
@@ -121,9 +119,10 @@ public class ServerHost
             { (int)ClientPackets.udpTestRecieved, ServerHandle.udpTestReceived },
             { (int)ClientPackets.ready, ServerHandle.ready },
             { (int)ClientPackets.updatePosRot, ServerHandle.updatePosRot },
-            { (int)ClientPackets.shoot, ServerHandle.shoot }
-            //{ (int)ClientPackets.addItem, ServerHandle.addItem },
-            //{ (int)ClientPackets.removeItem, ServerHandle.removeItem }
+            { (int)ClientPackets.shoot, ServerHandle.shoot },
+            { (int)ClientPackets.damagePlayer, ServerHandle.damagePlayer },
+            { (int)ClientPackets.addItem, ServerHandle.addItem },
+            { (int)ClientPackets.removeItem, ServerHandle.removeItem }
         };
         Debug.Log("initialized Packets");
     }
