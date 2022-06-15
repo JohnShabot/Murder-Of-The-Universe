@@ -6,9 +6,13 @@ public class EnemyServerController : MonoBehaviour
 {
     attackType at;
 
-    float HP = 50f;
+    float[] EStats; // HP, ATK, SPD, RNG
 
-
+    int myID;
+    void Start()
+    {
+       EStats = gameObject.GetComponent<EnemyStats>().stats;
+    }
     public void UpdatePosRot(Vector2 position, float rotation)
     {
         Rigidbody2D body = this.GetComponent<Rigidbody2D>();
@@ -19,11 +23,20 @@ public class EnemyServerController : MonoBehaviour
     public void damage(float dmg)
     {
         Debug.Log("Enemy Took Damage: " + dmg);
-        HP -= dmg;
-        if (HP <= 0)
+        EStats[0] -= dmg;
+        if (EStats[0] <= 0)
         {
+            GameManager.instance.DestroyEnemy(myID);
             Destroy(gameObject);
             Debug.Log("Enemy Died");
         }
+    }
+    public void setID(int id)
+    {
+        myID = id;
+    }
+    public void OnDestroy()
+    {
+        Debug.Log("Enemy Destroyed");
     }
 }

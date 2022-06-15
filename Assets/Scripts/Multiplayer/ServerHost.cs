@@ -18,6 +18,18 @@ public class ServerHost
     public delegate void PacketHandler(int fromClient, Packet packet);
     public static Dictionary<int, PacketHandler> packetHandlers;
 
+    public static void ChangeClientID(int oldID, int newID)
+    {
+        clients[oldID].id = newID;
+        clients[oldID].tcp.ChangeID(newID);
+        clients[oldID].udp.ChangeID(newID);
+        ServerClient c = clients[oldID];
+        clients.Remove(oldID);
+        clients[newID] =  c;
+        Debug.Log("successfully changed ID from " + oldID + " to " + newID);
+        Debug.Log(clients[newID]);
+    }
+
     public static void Start(int _max, int _port)
     {
         port = _port;
@@ -68,12 +80,12 @@ public class ServerHost
             using(Packet packet = new Packet(data))
             {
                 int ClientID = packet.ReadInt();
-
-                if(ClientID == 0)
+                System.Threading.Thread.Sleep(100);
+                if (ClientID == 0)
                 {
                     return;
                 }
-
+                
                 if(clients[ClientID].udp.endPoint == null)
                 {
                     clients[ClientID].udp.Connect(ClientEP);
@@ -122,7 +134,7 @@ public class ServerHost
             { (int)ClientPackets.shoot, ServerHandle.shoot },
             { (int)ClientPackets.damagePlayer, ServerHandle.damagePlayer },
             { (int)ClientPackets.addItem, ServerHandle.addItem },
-            { (int)ClientPackets.removeItem, ServerHandle.removeItem }
+
         };
         Debug.Log("initialized Packets");
     }

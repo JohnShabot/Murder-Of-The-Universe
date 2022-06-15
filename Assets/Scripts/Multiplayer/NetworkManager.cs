@@ -3,7 +3,6 @@ using System.Net.Sockets;
 using System;
 using System.Net;
 using System.Text;
-using System.Threading;
 using System.Collections.Generic;
 
 public class NetworkManager : MonoBehaviour
@@ -28,6 +27,7 @@ public class NetworkManager : MonoBehaviour
     private delegate void PacketHandler(Packet packet);
     private static Dictionary<int, PacketHandler> packetHandlers;
 
+    // This function is called before the very first frame is called
     private void Awake()
     {
         if (instance == null) instance = this;
@@ -36,10 +36,6 @@ public class NetworkManager : MonoBehaviour
             Debug.Log("Instance Already Exists, Destroying");
             Destroy(this);
         }
-    }
-    void Update()
-    {
-
     }
 
     public void StartClient(string remoteIP, string selfIP)
@@ -51,11 +47,11 @@ public class NetworkManager : MonoBehaviour
         tcp.Connect();
         isServer = false;
     }
-    public void StartServ()
+    public void StartServer()
     {
         isServer = true;
         myId = 0;
-        ServerHost.Start(2, 11111);
+        ServerHost.Start(1, 11111);
     }
 
     private void InitializeClientData()
@@ -73,14 +69,32 @@ public class NetworkManager : MonoBehaviour
             { (int)ServerPackets.damagePlayer, ClientHandle.damagePlayer },
             { (int)ServerPackets.spawnItem, ClientHandle.spawnItem },
             { (int)ServerPackets.addItem, ClientHandle.addItem },
-            { (int)ServerPackets.removeItem, ClientHandle.removeItem }
+            { (int)ServerPackets.bossKilled, ClientHandle.bossKilled },
+            { (int)ServerPackets.revivePlayer, ClientHandle.RevivePlayer },
+            { (int)ServerPackets.lose, ClientHandle.Lose },
+            { (int)ServerPackets.win, ClientHandle.Win },
+
 
         };
         Debug.Log("initialized Packets");
     }
 
     #region MainServerConnection
-
+    public void Win(int[] ids)
+    {
+        string s = "";
+        foreach(int i in ids)
+        {
+            s += i + "#";
+        }
+        byte[] sendData = Encoding.ASCII.GetBytes("WIN|" + s); // Turns data to bytes
+        NetworkStream stream = M.GetStream();
+        stream.Write(sendData, 0, sendData.Length); // Sends the data
+        byte[] buffer = new byte[1024]; // The variable that will store the recieved data
+        stream.Read(buffer, 0, 1024); // Read the data
+        string data = Encoding.ASCII.GetString(buffer); // Turn the data into a string
+        Debug.Log(data);
+    }
     
     public void Host(string roomName, string pass, string username)
     {
@@ -91,10 +105,7 @@ public class NetworkManager : MonoBehaviour
         stream.Read(buffer, 0, 1024); // Read the data
         string data = Encoding.ASCII.GetString(buffer); // Turn the data into a string
         Debug.Log(data);
-        sendData = Encoding.ASCII.GetBytes("CLOSE|"); // Turns data to bytes
-        stream.Write(sendData, 0, sendData.Length); // Sends the data
-        M.Close(); // Closes the connection
-        StartServ();
+        StartServer();
     }
     public void ConnectToHost(string hostName, string pass)
     {
@@ -144,7 +155,7 @@ public class NetworkManager : MonoBehaviour
         string data = Encoding.ASCII.GetString(buffer); // Turn the data into a string
         Debug.Log(data);
     }
-    public int Login(string name, string pass)
+    public bool Login(string name, string pass)
     {
         byte[] sendData = Encoding.ASCII.GetBytes("LOGIN|" + name + "#" + Hash128.Compute(pass).ToString()); // Turns data to bytes
         NetworkStream stream = M.GetStream();
@@ -156,7 +167,15 @@ public class NetworkManager : MonoBehaviour
         stream.Read(buffer, 0, 1024);
         Debug.Log(Encoding.ASCII.GetString(buffer));
         username = name;
-        return int.Parse(data);
+        if(int.Parse(data) == 0)
+        {
+            return false;
+        }
+        else
+        {
+            myId = int.Parse(data);
+            return true;
+        }
     }
     public int Verify(string code)
     {
@@ -173,9 +192,20 @@ public class NetworkManager : MonoBehaviour
     }
 
 
-    public void ConnectToMain()
+    public bool ConnectToMain(string ip)
     {
-        M = new TcpClient("127.0.0.1", 8888);  // Connects to server 
+        try
+        {
+            //if(ip == "")
+            //{
+            //    return false;
+            //}
+            M = new TcpClient(ip, 8888);  // Connects to server
+        }
+        catch
+        {
+            return false;
+        }
         byte[] sendData = Encoding.ASCII.GetBytes("START| "); // Turns data to bytes
         NetworkStream stream = M.GetStream();
         stream.Write(sendData, 0, sendData.Length); // Sends the data
@@ -183,6 +213,7 @@ public class NetworkManager : MonoBehaviour
         stream.Read(buffer, 0, 1024);
         string data = Encoding.ASCII.GetString(buffer);
         Debug.Log(data);
+        return true;
     }
     public void CloseConnectionMain()
     {

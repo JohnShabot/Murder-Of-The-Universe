@@ -13,11 +13,16 @@ public class PlayerController : MonoBehaviour
     LinkedList<Item> itemList;
 
     //Player Stats
-    public float[] PStats = new float[5];
+    public float[] PStats = { 100, 10, 5, 20, 10 };
 
     //Scene Dependant Objects
     Transform firePoint;
     GameObject bullet;
+
+    bool alive = true;
+    Sprite SAlive;
+    Sprite SDead;
+
 
     public void Initialize(GameObject bullPrefab)
     {
@@ -26,7 +31,7 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         body = GetComponent<Rigidbody2D>();
-        cam = Camera.FindObjectOfType<Camera>();
+        cam = GameManager.instance.cam;
         itemList = new LinkedList<Item>();
         foreach (Transform t in this.GetComponentsInChildren<Transform>())
         {
@@ -35,12 +40,18 @@ public class PlayerController : MonoBehaviour
                 firePoint = t;
             }
         }
+        SAlive = gameObject.GetComponent<SpriteRenderer>().sprite;
+        SDead = Sprite.Create(Texture2D.whiteTexture, new Rect(0, 0, 0, 0), new Vector2(0, 0));
     }
 
     void Update()
     {    
         movement();
         shooting();
+        if (!gameObject.GetComponent<SpriteRenderer>().color.Equals(new Color(255, 255, 255)))
+        {
+            gameObject.GetComponent<SpriteRenderer>().color = new Color(255, gameObject.GetComponent<SpriteRenderer>().color.g +1, gameObject.GetComponent<SpriteRenderer>().color.b+1);
+        }
     }
 
     private void FixedUpdate()
@@ -74,7 +85,7 @@ public class PlayerController : MonoBehaviour
     }
     void shooting()
     {
-        if (Input.GetButtonDown("Fire1"))
+        if (Input.GetButtonDown("Fire1") && alive)
         {
             GameObject bull = Instantiate(bullet, firePoint.position, firePoint.rotation);
             Rigidbody2D bullbody = bull.GetComponent<Rigidbody2D>();
@@ -95,42 +106,64 @@ public class PlayerController : MonoBehaviour
 
     public void damage(float dmg)
     {
-        PStats[0] -= dmg;
-        Debug.Log("P1 Took Damage: " + dmg);
-        if(PStats[0]<= 0)
+        if (alive)
         {
-            Debug.Log("P1 Died");
-            GameManager.instance.Players.Remove(NetworkManager.instance.myId);
-            Destroy(this.gameObject);
+            PStats[0] -= dmg;
+            Debug.Log("P1 Took Damage: " + dmg);
+            if (PStats[0] <= 0)
+            {
+                Debug.Log("P1 Died");
+                alive = false;
+                gameObject.GetComponent<SpriteRenderer>().sprite = SDead;
+                GameManager.instance.PlayerKilled(NetworkManager.instance.myId);
+            }
+            if (NetworkManager.instance.isServer.Value)
+            {
+                ServerSend.damagePlayer(0, dmg);
+            }
+            else if (!NetworkManager.instance.isServer.Value)
+            {
+                ClientSend.damagePlayer(dmg);
+            }
+            gameObject.GetComponent<SpriteRenderer>().color = new Color(255, 0, 0);
         }
-        if (NetworkManager.instance.isServer.Value)
-        {
-            ServerSend.damagePlayer(0, dmg);
-        }
-        else if (!NetworkManager.instance.isServer.Value)
-        {
-            ClientSend.damagePlayer(dmg);
-        }
+
     }
     void OnTriggerEnter2D(Collider2D c)
     {
         if (c.gameObject.tag == "Item")
-        {
-            Item it = c.gameObject.GetComponent<ItemPickup>().GetItem();
-            if (NetworkManager.instance.isServer.Value) ServerSend.addItem(NetworkManager.instance.myId, GameManager.instance.getItemID(it));
-            if (!NetworkManager.instance.isServer.Value) ClientSend.addItem(GameManager.instance.getItemID(it));
-
-            Debug.Log("Gathered New Item");
-            itemList.AddLast(it);
-            GameManager.instance.DestroyItem(c.gameObject);
-            for (int i = 0; i < 5; i++)
+        { 
+            if (alive)
             {
-                PStats[i] += it.getStatChange()[i];
+                Item it = c.gameObject.GetComponent<ItemPickup>().GetItem();
+                if (NetworkManager.instance.isServer.Value)
+                {
+                    ServerSend.addItem(NetworkManager.instance.myId, GameManager.instance.getItemID(it));
+                    GameManager.instance.f.setItemTaken(true);
+                }
+                else if (!NetworkManager.instance.isServer.Value)
+                {
+                    ClientSend.addItem(GameManager.instance.getItemID(it));
+                }
+                GameManager.instance.DestroyItem(c.gameObject);
+                if (NetworkManager.instance.isServer.Value)
+                {
+                    GameManager.instance.f.setItemTaken(true);
+                }
+                itemList.AddLast(c.gameObject.GetComponent<ItemPickup>().item);
+                for (int i = 0; i < 5; i++)
+                {
+                    PStats[i] += c.gameObject.GetComponent<ItemPickup>().item.getStatChange()[i];
+                }
             }
         }
     }
-    void OnDestroy()
+
+    public void RevivePlayer()
     {
-        Debug.Log("Destroying Player");
+        alive = true;
+        gameObject.GetComponent<SpriteRenderer>().sprite = SAlive;
+        PStats[0] = 50;
+
     }
 }

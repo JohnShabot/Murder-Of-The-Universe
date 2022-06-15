@@ -64,6 +64,7 @@ public class UIManager : MonoBehaviour
             if (s.name == changeTo) s.enabled = true;
             else s.enabled = false;
         }
+        if (changeTo == "Room Selector") RefreshRooms();
     }
     public void ExitGame()
     {
@@ -177,8 +178,8 @@ public class UIManager : MonoBehaviour
         Canvas LoginScreen = screens[2];
         InputField[] texts = LoginScreen.GetComponentsInChildren<InputField>();
         GameObject lbl = GameObject.Find("Invalid Details LI");
-        int s = NetworkManager.instance.Login(texts[0].text, texts[1].text);
-        if (s == 1)
+        bool s = NetworkManager.instance.Login(texts[0].text, texts[1].text);
+        if (s)
         {
             UserName = texts[0].text;
             ChangeScreen("Two Factor Auth");
@@ -189,6 +190,25 @@ public class UIManager : MonoBehaviour
         else
         {
             lbl.GetComponent<Text>().text = "Invalid Details";
+        }
+
+    }
+    public void ConnectToMain()
+    {
+        Canvas LoginScreen = screens[0];
+        InputField IPField = LoginScreen.GetComponentInChildren<InputField>();
+        GameObject lbl = GameObject.Find("Invalid Details IP");
+        bool s = NetworkManager.instance.ConnectToMain(IPField.text);
+        if (s)
+        {
+            UserName = IPField.text;
+            ChangeScreen("Login Screen");
+            IPField.text = "";
+            lbl.GetComponent<Text>().text = "";
+        }
+        else
+        {
+            lbl.GetComponent<Text>().text = "Invalid Server IP";
         }
 
     }

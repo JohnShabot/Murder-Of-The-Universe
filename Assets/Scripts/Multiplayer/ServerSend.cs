@@ -15,9 +15,19 @@ public class ServerSend
     }
     private static void SendUDPDataToAll(Packet packet)
     {
-        for (int i = 1; i <= ServerHost.maxPlayers; i++)
+        foreach(int k in ServerHost.clients.Keys)
         {
-            SendUDPData(i, packet);
+            if (ServerHost.clients[k] != null) SendUDPData(k, packet);
+        }
+    }
+    private static void SendUDPDataToAll(int exceptClient, Packet packet)
+    {
+        foreach (int k in ServerHost.clients.Keys)
+        {
+            if (ServerHost.clients[k] != null)
+            {
+                if (k != exceptClient) SendUDPData(k, packet);
+            }
         }
     }
     private static void SendTCPData(int toClient, Packet packet)
@@ -27,18 +37,18 @@ public class ServerSend
     }
     private static void SendTCPDataToAll(Packet packet)
     {
-        for (int i = 1; i <= ServerHost.maxPlayers; i++)
+        foreach (int k in ServerHost.clients.Keys)
         {
-            SendTCPData(i, packet);
+            if (ServerHost.clients[k] != null)  SendTCPData(k, packet);
         }
     }
     private static void SendTCPDataToAll(int exceptClient, Packet packet)
     {
-        for (int i = 1; i <= ServerHost.maxPlayers; i++)
+        foreach (int k in ServerHost.clients.Keys)
         {
-            if (ServerHost.clients[i] != null)
+            if (ServerHost.clients[k] != null)
             {
-                if (i != exceptClient) SendTCPData(i, packet);
+                if (k != exceptClient) SendTCPData(k, packet);
             }
         }
     } 
@@ -77,7 +87,6 @@ public class ServerSend
         {
             _packet.Write(ItemType);
             SendTCPDataToAll(_packet);
-            Debug.Log("so far so good");
         }
     }
     public static void damageEnemy(int id, float dmg)
@@ -143,6 +152,35 @@ public class ServerSend
             _packet.Write(PID);
             _packet.Write(IID);
             SendTCPDataToAll(PID, _packet);
+        }
+    }
+    public static void bossKilled(string bossKilled)
+    {
+        using (Packet _packet = new Packet((int)ServerPackets.bossKilled))
+        {
+            _packet.Write(bossKilled);
+            SendTCPDataToAll(_packet);
+        }
+    }
+    public static void RevivePlayer()
+    {
+        using (Packet _packet = new Packet((int)ServerPackets.revivePlayer))
+        {
+            SendTCPDataToAll(_packet);
+        }
+    }
+    public static void Win()
+    {
+        using (Packet _packet = new Packet((int)ServerPackets.win))
+        {
+            SendTCPDataToAll(_packet);
+        }
+    }
+    public static void Lose()
+    {
+        using (Packet _packet = new Packet((int)ServerPackets.lose))
+        {
+            SendTCPDataToAll(_packet);
         }
     }
     #endregion

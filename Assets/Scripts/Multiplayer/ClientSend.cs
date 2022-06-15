@@ -16,7 +16,7 @@ public class ClientSend
         NetworkManager.instance.udp.sendData(packet);
     }
     #region Packets
-    public static void welcomeRecieved(string clientName)
+    public static void welcomeRecieved(int initID, string clientName)
     {
         using (Packet _packet = new Packet((int)ClientPackets.welcomeReceived))
         {

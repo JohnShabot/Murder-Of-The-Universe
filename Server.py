@@ -3,7 +3,7 @@ import threading
 import sqlite3
 import smtplib
 import random
-
+from email.message import EmailMessage
 
 def client_connection(c, c_address):
     print("connected: " + str(c_address))
@@ -61,6 +61,13 @@ def client_connection(c, c_address):
                 except Exception as exc:
                     print("An Error Occurred "+str(type(exc)) + str(exc))
                     c.send(("An Error Occurred "+str(type(exc)) + str(exc)).encode())
+            elif data[0] == "WIN" and logged_in:
+                try:
+                    win(data[1])
+                    c.send("Accepted".encode())
+                except Exception as exc:
+                    print("An Error Occurred " + str(type(exc)) + str(exc))
+                    c.send(("An Error Occurred " + str(type(exc)) + str(exc)).encode())
             elif data[0] == 'CLOSE':
                 close(c)
                 break
@@ -73,24 +80,23 @@ def login(name, password, c):
     if data == []:
         c.send("0".encode())
     elif data[0][0] == password:
-        c.send("1".encode())
-        with smtplib.SMTP('smtp.gmail.com', 587) as smtp:
-            smtp.ehlo()
-            smtp.starttls()
-            smtp.ehlo()
-            crsr.execute("SELECT Email FROM USERS WHERE Name = ?", (name,))
-            email = crsr.fetchall()[0][0]
-            # smtp.login("revengeofthedreamers3@gmail.com", "R3V3NG30fTh3Dr3m3rs")
+        crsr.execute("SELECT Email, ID FROM USERS WHERE Name = ?", (name,))
+        cfa = crsr.fetchall()[0]
+        email = cfa[0]
 
-            # a = random.randint(1000, 10000)
-            a = 1
-            subject = 'Confirmation Code'
-            body = "Hello,\nThe verification code is: " + str(a) + "\nHave Fun!"
+        c.send(str(cfa[1]).encode())
+        
+        # a = random.randint(1000, 10000)
+        a = 1
+        msg = EmailMessage()
+        message = "Thank you for choosing to play Murder Of The Universe!\nThe security code is " + str(a)
+        msg.set_content(message)
 
-            msg = f'Subject: {subject}\n\n{body}'
-
-            # smtp.sendmail("revengeofthedreamers3@gmail.com", email, msg)
-            return a
+        msg['Subject'] = "Your Security Code For Logging Into Murder Of The Universe"
+        msg['From'] = "MurderOfTheUniverse@outlook.com"
+        msg['To'] = email
+        # emailServer.send_message(msg)
+        return a
     else:
         c.send("0".encode())
 
@@ -99,23 +105,20 @@ def register(name, password, email):
     global s
     crsr.execute("INSERT INTO Users(Name, Password, Email, Wins) values(?, ?, ?,0)", (name, password, email))
     conn.commit()
-    with smtplib.SMTP('smtp.gmail.com', 587) as smtp:
-        smtp.ehlo()
-        smtp.starttls()
-        smtp.ehlo()
-        crsr.execute("SELECT Email FROM USERS WHERE Name = ?", (name,))
-        email = crsr.fetchall()[0][0]
-        smtp.login("revengeofthedreamers3@gmail.com", "R3V3NG30fTh3Dr3m3rs")
 
-        a = random.randint(1000, 10000)
+    crsr.execute("SELECT Email FROM USERS WHERE Name = ?", (name,))
+    email = crsr.fetchall()[0][0]
 
-        subject = 'Confirmation Code'
-        body = "Hello,\nThe verification code is: " + str(a) + "\nHave Fun!"
+    a = random.randint(1000, 10000)
+    msg = EmailMessage()
+    message = "Thank you for choosing to play Murder Of The Universe!\nThe security code is " + str(a)
+    msg.set_content(message)
 
-        msg = f'Subject: {subject}\n\n{body}'
-
-        smtp.sendmail("revengeofthedreamers3@gmail.com", email, msg)
-        return a
+    msg['Subject'] = "Your Security Code For Logging Into Murder Of The Universe"
+    msg['From'] = "MurderOfTheUniverse@outlook.com"
+    msg['To'] = email
+    emailServer.send_message(msg)
+    return a
 
 
 def verify(code, c, a, tries):
@@ -154,6 +157,14 @@ def join(name, password, c, c_address):
         c.send('0'.encode())
 
 
+def win(ids):
+    id_list = ids.split("#")
+    for i in id_list:
+        crsr.execute("SELECT Wins FROM USERS WHERE ID = ?", (i,))
+        wins = crsr.fetchall()[0][0]
+        crsr.execute("UPDATE Users SET Wins=? WHERE CustomerID = ?", (wins+1, i))
+
+
 def close(c):
     c.close()
 
@@ -177,8 +188,11 @@ def start_server():
 
 host_list = {}
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-conn = sqlite3.connect("Revenge Of The Dreamers III.db", check_same_thread=False)
+conn = sqlite3.connect("Murder Of The Universe.db", check_same_thread=False)
 crsr = conn.cursor()
+emailServer = smtplib.SMTP(host="smtp.office365.com", port=587)
+emailServer.starttls()
+emailServer.login("MurderOfTheUniverse@outlook.com","Murd3r0fTh3Un1v3rs3")
 main = threading.Thread(target=start_server)
 main.start()
 

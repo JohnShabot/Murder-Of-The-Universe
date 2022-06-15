@@ -24,7 +24,7 @@ public class ServerClient
     {
         public TcpClient socket;
 
-        private readonly int id;
+        private int id;
         private NetworkStream stream;
         private Packet recievedData;
         private byte[] buffer;
@@ -33,7 +33,10 @@ public class ServerClient
         {
             id = _id;
         }
-
+        public void ChangeID(int newID)
+        {
+            id = newID;
+        }
         public void Connect(TcpClient _socket)
         {
             socket = _socket;
@@ -138,7 +141,10 @@ public class ServerClient
         {
             this.id = id;
         }
-
+        public void ChangeID(int newID)
+        {
+            id = newID;
+        }
         public void Connect(IPEndPoint endPoint)
         {
             this.endPoint = endPoint;

@@ -9,6 +9,8 @@ TagManager:
   - Manager
   - ServerControledPlayer
   - ClientControledPlayer
+  - SlimeBoss
+  - HanTyumi
   layers:
   - Default
   - TransparentFX

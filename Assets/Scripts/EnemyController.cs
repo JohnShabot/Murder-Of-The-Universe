@@ -15,11 +15,7 @@ public class EnemyController : MonoBehaviour
 
     attackType at;
 
-    float HP = 50f;
-    float attack = 10f;
-    float speed = 3f;
-    float Range = 5f;
-
+    float[] EStats; // HP, ATK, SPD, RNG
     private float wait;
     float startWait = 3;
     int InvFrame = 0;
@@ -37,6 +33,7 @@ public class EnemyController : MonoBehaviour
         }
         wait = startWait;
         randomSpots = Random.Range(0, MoveSpots.ToArray().Length);
+        EStats = gameObject.GetComponent<EnemyStats>().stats;
     }
     private void FixedUpdate()
     {
@@ -52,14 +49,14 @@ public class EnemyController : MonoBehaviour
             foreach (int i in GameManager.instance.Players.Keys)
             {
                 float d = Vector2.Distance(transform.position, GameManager.instance.Players[i].transform.position);
-                if (d < minD)
+                if (d < minD && GameManager.instance.playerDead != i)
                 {
                     minD = d;
                     id = i;
                 }
             }
 
-            if (minD < Range)
+            if (minD < EStats[3])
             {
                 Chase(id);
             }
@@ -78,8 +75,7 @@ public class EnemyController : MonoBehaviour
 
     void PatrolNext()
     {
-        Debug.Log(wait);
-        transform.position = Vector2.MoveTowards(transform.position, MoveSpots[randomSpots].position, speed * Time.deltaTime); // moves the enemy the a desired pos //
+        transform.position = Vector2.MoveTowards(transform.position, MoveSpots[randomSpots].position, EStats[2] * Time.deltaTime); // moves the enemy the a desired pos //
         Vector2 lookDir = MoveSpots[randomSpots].position - transform.position; // calculates the vector from the player to the mouse
         float angle = Mathf.Atan2(lookDir.y, lookDir.x) * Mathf.Rad2Deg - 90f; // calculates the angle from the player to the mouse
         this.GetComponent<Rigidbody2D>().rotation = angle;
@@ -97,8 +93,8 @@ public class EnemyController : MonoBehaviour
 
     void Chase(int id)
     {
-        transform.position = Vector2.MoveTowards(transform.position, GameManager.instance.Players[id].transform.position, speed * Time.deltaTime);
-        Vector2 lookDir = GameManager.instance.Players[id].transform.position - transform.position; // calculates the vector from the player to the mouse
+        transform.position = Vector2.MoveTowards(transform.position, GameManager.instance.Players[id].transform.position, EStats[2] * Time.deltaTime);
+        Vector2 lookDir = GameManager.instance.Players[id].transform.position - transform.position; // calculates the vector from the enemy to the player
         float angle = Mathf.Atan2(lookDir.y, lookDir.x) * Mathf.Rad2Deg - 90f; // calculates the angle from the player to the mouse
         this.GetComponent<Rigidbody2D>().rotation = angle;
     }
@@ -113,7 +109,7 @@ public class EnemyController : MonoBehaviour
         if (collision.collider.tag == "Player" && InvFrame >= 100)
         {
             if (collision.gameObject.Equals(GameManager.instance.Players[NetworkManager.instance.myId]))
-                collision.gameObject.GetComponent<PlayerController>().damage(attack);
+                collision.gameObject.GetComponent<PlayerController>().damage(EStats[1]);
             InvFrame = 0;
         }
     }
@@ -127,21 +123,30 @@ public class EnemyController : MonoBehaviour
         }
         if (collision.collider.tag == "Player" && InvFrame >= 100)
         {
-            if(collision.gameObject.Equals(GameManager.instance.Players[NetworkManager.instance.myId]))
-                collision.gameObject.GetComponent<PlayerController>().damage(attack);
+            if (collision.gameObject.Equals(GameManager.instance.Players[NetworkManager.instance.myId]))
+                collision.gameObject.GetComponent<PlayerController>().damage(EStats[1]);
+            else
+            {
+                foreach(int id in GameManager.instance.Players.Keys)
+                {
+                    if (GameManager.instance.Players[id].Equals(collision.gameObject)) ServerSend.damagePlayer(id, EStats[1]);
+                }
+            }
             InvFrame = 0;
         }
     }
     public void damage(float dmg)
     {
+        ServerSend.damageEnemy(myID, dmg);
         Debug.Log("Enemy Took Damage: " + dmg);
-        HP -= dmg;
-        if (HP <= 0)
+        EStats[0] -= dmg;
+        if (EStats[0] <= 0)
         {
+            GameManager.instance.DestroyEnemy(myID);
             Destroy(gameObject);
             Debug.Log("Enemy Died");
         }
-        ServerSend.damageEnemy(myID,dmg);
+        
     }
 
     public void setID(int id)

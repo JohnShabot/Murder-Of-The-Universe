@@ -28,6 +28,12 @@ public class Bullet : MonoBehaviour
                     col.gameObject.GetComponent<EnemyController>().damage(dmg);
                 }
                 break;
+            case "SlimeBoss":
+                col.gameObject.GetComponent<SlimeBossController>().damage(dmg);
+                break;
+            case "HanTyumi":
+                col.gameObject.GetComponent<HanTyumiController>().damage(dmg);
+                break;
         }
         Destroy(gameObject);
     }

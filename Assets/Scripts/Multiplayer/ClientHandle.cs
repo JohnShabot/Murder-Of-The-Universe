@@ -10,11 +10,9 @@ public class ClientHandle
     {
         string hostName = packet.ReadString();
         int id = packet.ReadInt();
-
         Debug.Log($"The host's name is {hostName}");
-        NetworkManager.instance.myId = id;
         UIManager.instance.ChangeP1Name(hostName);
-        ClientSend.welcomeRecieved(NetworkManager.instance.username);
+        ClientSend.welcomeRecieved(NetworkManager.instance.myId, NetworkManager.instance.username);
 
         NetworkManager.instance.udp.Connect(((IPEndPoint)NetworkManager.instance.tcp.socket.Client.LocalEndPoint).Port);
     }
@@ -31,7 +29,8 @@ public class ClientHandle
     }
     public static void updatePosRot(Packet packet)
     {
-        GameManager.instance.Players[0].GetComponent<PlayerServerController>().UpdatePosRot(packet.ReadVector2(), packet.ReadFloat());
+        if(GameManager.instance.Players.ContainsKey(0))
+            GameManager.instance.Players[0].GetComponent<PlayerServerController>().UpdatePosRot(packet.ReadVector2(), packet.ReadFloat());
     }
     public static void shoot(Packet packet)
     {
@@ -39,6 +38,7 @@ public class ClientHandle
     }
     public static void spawnEnemy(Packet packet)
     {
+        Debug.Log("Spawned Enemy");
         GameManager.instance.SpawnEnemy(packet.ReadVector2(), packet.ReadString());
     }
     public static void spawnItem(Packet packet)
@@ -68,9 +68,20 @@ public class ClientHandle
         GameObject p = GameManager.instance.Players[packet.ReadInt()];
         p.GetComponent<PlayerServerController>().AddItem(GameManager.instance.ItemTypes[packet.ReadInt()]);
     }
-    public static void removeItem(Packet packet)
+    public static void bossKilled(Packet packet)
     {
-        GameObject p = GameManager.instance.Players[packet.ReadInt()];
-        p.GetComponent<PlayerServerController>().RemoveItem(GameManager.instance.ItemTypes[packet.ReadInt()].GetComponent<ItemPickup>().item);
+        GameManager.instance.BossKilled(packet.ReadString());
+    }
+    public static void RevivePlayer(Packet packet)
+    {
+        GameManager.instance.RevivePlayer();
+    }
+    public static void Win(Packet packet)
+    {
+
+    }
+    public static void Lose(Packet packet)
+    {
+
     }
 }

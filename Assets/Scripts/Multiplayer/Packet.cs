@@ -11,14 +11,17 @@ public enum ServerPackets
     udpTest,
     ready,
     updatePosRot,
-    damagePlayer,
-    addItem,
-    removeItem,
-    spawnItem,
     shoot,
+    addItem,
+    bossKilled,
     spawnEnemy,
+    spawnItem,
     updateEnemyPos,
+    damagePlayer,
     damageEnemy,
+    revivePlayer,
+    win,
+    lose
 }
 
 /// <summary>Sent from client to server.</summary>
@@ -29,7 +32,6 @@ public enum ClientPackets
     ready,
     updatePosRot,
     addItem,
-    removeItem,
     shoot,
     damagePlayer,
 }
