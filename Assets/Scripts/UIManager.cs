@@ -234,4 +234,17 @@ public class UIManager : MonoBehaviour
             Btn.SetActive(false);
         }
     }
+    public void LoadTitleScreen()
+    {
+        screens = FindObjectsOfType<Canvas>();
+        passwordPanel = GameObject.Find("Password Input");
+        RoomsSection = GameObject.Find("Rooms");
+        passwordPanel.SetActive(false);
+        foreach (Canvas s in screens)
+        {
+            if (s.name == "Title Screen") s.enabled = true;
+            else s.enabled = false;
+        }
+        roomLabels = new List<GameObject>();
+    }
 }

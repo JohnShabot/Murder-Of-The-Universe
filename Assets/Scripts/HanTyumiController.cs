@@ -16,8 +16,20 @@ public class HanTyumiController : MonoBehaviour
 
     private int randomSpots;
 
+    GameObject bullet;
+
+    Transform firePoint;
+
     void Start()
     {
+        foreach (Transform t in gameObject.GetComponentsInChildren<Transform>())
+        {
+            if(t != transform)
+            {
+                firePoint = t;
+            }
+        }
+        bullet = Resources.Load("Prefabs/Players/laserbulletEnemy.prefab") as GameObject;
         wait = startWait;
         EStats = gameObject.GetComponent<EnemyStats>().stats;
     }
@@ -27,6 +39,7 @@ public class HanTyumiController : MonoBehaviour
     }
     void Update()
     {
+        wait++;
         try
         {
             Rigidbody2D body = this.GetComponent<Rigidbody2D>();
@@ -52,6 +65,10 @@ public class HanTyumiController : MonoBehaviour
                 SpawnCyborgs();
             }
             ServerSend.updateEnemyPos(myID, body.position, body.rotation);
+            if(wait % 20 == 0)
+            {
+                shooting();
+            }
         }
         catch
         {
@@ -64,18 +81,27 @@ public class HanTyumiController : MonoBehaviour
 
         if (wait <= 0 && GameManager.instance.getCurrentEnemies().Count < 10)
         {
-            GameManager.instance.SpawnEnemy(gameObject.transform.position, "Cyborg 1");
-            GameManager.instance.SpawnEnemy(gameObject.transform.position, "Cyborg 2");
-            GameManager.instance.SpawnEnemy(gameObject.transform.position, "Cyborg 3");
-            ServerSend.spawnEnemy(gameObject.transform.position, "Cyborg 1");
-            ServerSend.spawnEnemy(gameObject.transform.position, "Cyborg 2");
-            ServerSend.spawnEnemy(gameObject.transform.position, "Cyborg 3");
+            GameManager.instance.SpawnEnemy(gameObject.transform.position, "FastZombie");
+            GameManager.instance.SpawnEnemy(gameObject.transform.position, "NormalZombie");
+            GameManager.instance.SpawnEnemy(gameObject.transform.position, "BuffedZombie");
+            ServerSend.spawnEnemy(gameObject.transform.position, "FastZombie");
+            ServerSend.spawnEnemy(gameObject.transform.position, "NormalZombie");
+            ServerSend.spawnEnemy(gameObject.transform.position, "BuffedZombie");
 
             wait = startWait;
         }
         else wait -= Time.deltaTime;
     }
 
+    void shooting()
+    {
+        ServerSend.enemyShoot(myID);
+        GameObject bull = Instantiate(bullet, firePoint.position, firePoint.rotation);
+        Rigidbody2D bullbody = bull.GetComponent<Rigidbody2D>();
+        bull.GetComponent<Bullet>().SetCameFrom(gameObject);
+        bull.GetComponent<Bullet>().setDMG(EStats[1]);
+        bullbody.AddForce(firePoint.up * 10, ForceMode2D.Impulse);
+    }
 
     void Chase(int id)
     {

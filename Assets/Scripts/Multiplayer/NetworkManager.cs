@@ -50,7 +50,6 @@ public class NetworkManager : MonoBehaviour
     public void StartServer()
     {
         isServer = true;
-        myId = 0;
         ServerHost.Start(1, 11111);
     }
 
@@ -73,6 +72,7 @@ public class NetworkManager : MonoBehaviour
             { (int)ServerPackets.revivePlayer, ClientHandle.RevivePlayer },
             { (int)ServerPackets.lose, ClientHandle.Lose },
             { (int)ServerPackets.win, ClientHandle.Win },
+            {(int)ServerPackets.enemyShoot, ClientHandle.enemyShoot }
 
 
         };
@@ -217,7 +217,7 @@ public class NetworkManager : MonoBehaviour
     }
     public void CloseConnectionMain()
     {
-        byte[] sendData = Encoding.ASCII.GetBytes("Close| "); // Turns data to bytes
+        byte[] sendData = Encoding.ASCII.GetBytes("CLOSE| "); // Turns data to bytes
         NetworkStream stream = M.GetStream();
         stream.Write(sendData, 0, sendData.Length); // Sends the data
         M.Close();
@@ -413,5 +413,17 @@ public class NetworkManager : MonoBehaviour
             });
         }
     }
-        #endregion
+    #endregion
+
+    private void OnApplicationQuit()
+    {
+        try
+        {
+            CloseConnectionMain();
+        }
+        catch
+        {
+
+        }
+    }
 }

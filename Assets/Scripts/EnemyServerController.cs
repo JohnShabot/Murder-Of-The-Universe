@@ -9,9 +9,21 @@ public class EnemyServerController : MonoBehaviour
     float[] EStats; // HP, ATK, SPD, RNG
 
     int myID;
+
+
+    GameObject bullet;
+    Transform firePoint;
     void Start()
     {
-       EStats = gameObject.GetComponent<EnemyStats>().stats;
+        foreach (Transform t in gameObject.GetComponentsInChildren<Transform>())
+        {
+            if (t != transform)
+            {
+                firePoint = t;
+            }
+        }
+        bullet = Resources.Load("Prefabs/Players/laserbulletEnemy.prefab") as GameObject;
+        EStats = gameObject.GetComponent<EnemyStats>().stats;
     }
     public void UpdatePosRot(Vector2 position, float rotation)
     {
@@ -35,6 +47,15 @@ public class EnemyServerController : MonoBehaviour
     {
         myID = id;
     }
+    public void Shoot()
+    {
+        GameObject bull = Instantiate(bullet, firePoint.position, firePoint.rotation);
+        Rigidbody2D bullbody = bull.GetComponent<Rigidbody2D>();
+        bull.GetComponent<Bullet>().SetCameFrom(gameObject);
+        bull.GetComponent<Bullet>().setDMG(EStats[1]);
+        bullbody.AddForce(firePoint.up * 10, ForceMode2D.Impulse);
+    }
+
     public void OnDestroy()
     {
         Debug.Log("Enemy Destroyed");

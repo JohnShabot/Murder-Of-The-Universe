@@ -116,7 +116,7 @@ public class GameManager : MonoBehaviour
             }
             if (NetworkManager.instance.isServer.Value)
             {
-                cam.transform.position = new Vector3(Players[0].transform.position.x, Players[NetworkManager.instance.myId].transform.position.y, -1);
+                cam.transform.position = new Vector3(Players[0].transform.position.x, Players[0].transform.position.y, -1);
                 if(currentFloor > 0 && f != null && CurrentEnemies.Count == 0)
                 {
                     f.SpawnNextWave();
@@ -307,22 +307,31 @@ public class GameManager : MonoBehaviour
         int[] ids = new int[Players.Keys.Count];
         Players.Keys.CopyTo(ids, 0);
         Debug.Log("You Win");
-        if(NetworkManager.instance.isServer.Value) NetworkManager.instance.Win(ids);
+        if (NetworkManager.instance.isServer.Value)
+        {
+            ServerSend.Win();
+            NetworkManager.instance.Win(ids);
+        }
         foreach(int id in Players.Keys)
         {
             Destroy(Players[id]);
-            Players = new Dictionary<int, GameObject>();
         }
-        SceneManager.LoadScene("Title Screen", new LoadSceneParameters(LoadSceneMode.Single));
-        UIManager.instance.ChangeScreen("Room Selector");
+        Players = new Dictionary<int, GameObject>();
+        SceneManager.LoadScene("Title Screen After Game", new LoadSceneParameters(LoadSceneMode.Single));
+        UIManager.instance.LoadTitleScreen();
     }
     public void Lose()
     {
-        Debug.Log("You Lose");
+        Debug.Log("You Lost");
+        if (NetworkManager.instance.isServer.Value)
+        {
+            ServerSend.Lose();
+        }
         foreach (int id in Players.Keys)
         {
             Destroy(Players[id]);
         }
-        SceneManager.LoadScene("Title Screen", new LoadSceneParameters(LoadSceneMode.Single));
+        Players = new Dictionary<int, GameObject>();
+        SceneManager.LoadScene("Title Screen After Game", new LoadSceneParameters(LoadSceneMode.Single));
     }
 }

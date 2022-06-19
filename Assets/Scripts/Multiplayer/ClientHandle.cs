@@ -63,6 +63,11 @@ public class ClientHandle
         GameObject p = GameManager.instance.Players[packet.ReadInt()];
         p.GetComponent<PlayerServerController>().damage(packet.ReadFloat());
     }
+    public static void enemyShoot(Packet packet)
+    {
+        GameObject e = GameManager.instance.getCurrentEnemies()[packet.ReadInt()];
+        e.GetComponent<EnemyServerController>().Shoot();
+    }
     public static void addItem(Packet packet)
     {
         GameObject p = GameManager.instance.Players[packet.ReadInt()];
@@ -78,10 +83,10 @@ public class ClientHandle
     }
     public static void Win(Packet packet)
     {
-
+        GameManager.instance.Win();
     }
     public static void Lose(Packet packet)
     {
-
+        GameManager.instance.Lose();
     }
 }

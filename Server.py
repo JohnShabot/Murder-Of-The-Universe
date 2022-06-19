@@ -9,16 +9,18 @@ def client_connection(c, c_address):
     print("connected: " + str(c_address))
     global s
     a = ""
+    pid = 0
     tries = 3
     logged_in = False
     while True:
         data = c.recv(1024).decode()
-        print(data)
-        if data != "":
+        if "|" in data:
+            print(data)
             data = data.split('|')
             if data[0] == "VERIFY":
                 try:
                     if tries > 0 and not logged_in:
+                        print("so far so good")
                         logged_in = verify(data[1], c, a, tries)
                         c.send("accepted".encode())
                 except Exception as exc:
@@ -33,10 +35,15 @@ def client_connection(c, c_address):
             elif data[0] == 'LOGIN' and not logged_in:
                 data = data[1].split('#')
                 try:
-                    a = login(data[0], data[1], c)
+                    tpl = login(data[0], data[1], c)
+                    print(tpl)
+                    if tpl != None:
+                        a = tpl[0]
+                        pid = tpl[1]
                     c.send("Accepted".encode())
-                    print(a)
+                    print("The code is " + str(a))
                 except Exception as exc:
+                    print(exc)
                     c.send(("An Error Occurred "+str(type(exc)) + str(exc)).encode())
             elif data[0] == 'START':
                 c.send("Accepted".encode())
@@ -69,23 +76,26 @@ def client_connection(c, c_address):
                     print("An Error Occurred " + str(type(exc)) + str(exc))
                     c.send(("An Error Occurred " + str(type(exc)) + str(exc)).encode())
             elif data[0] == 'CLOSE':
-                close(c)
+                print("ima")
+                close(c, pid)
                 break
 
 
 def login(name, password, c):
+    print(players_connected)
     global s
-    crsr.execute("SELECT Password FROM USERS WHERE Name = ?", (name,))
+    crsr.execute("SELECT Password, ID FROM USERS WHERE Name = ?", (name,))
     data = crsr.fetchall()
+    print(data[0])
     if data == []:
         c.send("0".encode())
-    elif data[0][0] == password:
-        crsr.execute("SELECT Email, ID FROM USERS WHERE Name = ?", (name,))
+    elif data[0][0] == password and not data[0][1] in players_connected:
+        crsr.execute("SELECT Email FROM USERS WHERE Name = ?", (name,))
         cfa = crsr.fetchall()[0]
         email = cfa[0]
 
-        c.send(str(cfa[1]).encode())
-        
+        c.send(str(data[0][1]).encode())
+        players_connected.append(data[0][1])
         # a = random.randint(1000, 10000)
         a = 1
         msg = EmailMessage()
@@ -96,7 +106,8 @@ def login(name, password, c):
         msg['From'] = "MurderOfTheUniverse@outlook.com"
         msg['To'] = email
         # emailServer.send_message(msg)
-        return a
+        print(players_connected)
+        return tuple((a, data[0][1]))
     else:
         c.send("0".encode())
 
@@ -122,8 +133,9 @@ def register(name, password, email):
 
 
 def verify(code, c, a, tries):
-
+    print("a = " + str(a))
     if int(code) == a:
+        print(a)
         c.send("1".encode())
         return True
     else:
@@ -152,21 +164,28 @@ def join(name, password, c, c_address):
     global host_list, s
     if host_list[name][0] == password:
         print(host_list[name][3])
+        host_list[name][2] = True
         c.send((str(host_list[name][3]) + "#" + str(c_address)).encode())
     else:
         c.send('0'.encode())
 
 
 def win(ids):
-    id_list = ids.split("#")
+    id_list = ids[0:-1:].split("#")
+    print(id_list)
     for i in id_list:
         crsr.execute("SELECT Wins FROM USERS WHERE ID = ?", (i,))
         wins = crsr.fetchall()[0][0]
-        crsr.execute("UPDATE Users SET Wins=? WHERE CustomerID = ?", (wins+1, i))
+
+        crsr.execute("UPDATE Users SET Wins=? WHERE ID = ?", (wins + 1, i))
 
 
-def close(c):
+def close(c, pid):
     c.close()
+    if pid in players_connected:
+        print("players connected: " + str(players_connected))
+        players_connected.remove(pid)
+
 
 
 def start_server():
@@ -187,6 +206,7 @@ def start_server():
 
 
 host_list = {}
+players_connected = []
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 conn = sqlite3.connect("Murder Of The Universe.db", check_same_thread=False)
 crsr = conn.cursor()

@@ -145,6 +145,14 @@ public class ServerSend
             SendUDPDataToAll(_packet);
         }
     }
+    public static void enemyShoot(int id)
+    {
+        using (Packet _packet = new Packet((int)ServerPackets.enemyShoot))
+        {
+            _packet.Write(id);
+            SendUDPDataToAll(_packet);
+        }
+    }
     public static void addItem(int PID, int IID)
     {
         using (Packet _packet = new Packet((int)ServerPackets.addItem))

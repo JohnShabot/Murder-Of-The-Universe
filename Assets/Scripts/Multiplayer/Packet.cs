@@ -19,6 +19,7 @@ public enum ServerPackets
     updateEnemyPos,
     damagePlayer,
     damageEnemy,
+    enemyShoot,
     revivePlayer,
     win,
     lose

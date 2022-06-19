@@ -123,13 +123,17 @@ public class EnemyController : MonoBehaviour
         }
         if (collision.collider.tag == "Player" && InvFrame >= 100)
         {
-            if (collision.gameObject.Equals(GameManager.instance.Players[NetworkManager.instance.myId]))
+            if (collision.gameObject.Equals(GameManager.instance.Players[0]))
                 collision.gameObject.GetComponent<PlayerController>().damage(EStats[1]);
             else
             {
-                foreach(int id in GameManager.instance.Players.Keys)
+                foreach (int id in GameManager.instance.Players.Keys)
                 {
-                    if (GameManager.instance.Players[id].Equals(collision.gameObject)) ServerSend.damagePlayer(id, EStats[1]);
+                    if (GameManager.instance.Players[id].Equals(collision.gameObject))
+                    {
+                        ServerSend.damagePlayer(id, EStats[1]);
+                        break;
+                    }
                 }
             }
             InvFrame = 0;
@@ -148,6 +152,7 @@ public class EnemyController : MonoBehaviour
         }
         
     }
+
 
     public void setID(int id)
     {
