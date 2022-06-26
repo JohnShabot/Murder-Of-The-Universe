@@ -17,7 +17,7 @@ public class MoveToNewFloor : MonoBehaviour
     }
     void Update()
     {
-        float minD = Vector2.Distance(transform.position, GameManager.instance.Players[0].transform.position);
+        float minD = Vector2.Distance(transform.position, GameManager.instance.Players[NetworkManager.instance.myId].transform.position);
         int id = 0;
         foreach (int i in GameManager.instance.Players.Keys)
         {

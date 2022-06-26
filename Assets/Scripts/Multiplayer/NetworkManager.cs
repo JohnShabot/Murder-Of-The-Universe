@@ -94,6 +94,13 @@ public class NetworkManager : MonoBehaviour
         stream.Read(buffer, 0, 1024); // Read the data
         string data = Encoding.ASCII.GetString(buffer); // Turn the data into a string
         Debug.Log(data);
+        CloseConnectionMain();
+        if (!isServer.Value)
+        {
+            P2P.Close();
+            P2P = null;
+        }
+        else ServerHost.closeCon();
     }
     
     public void Host(string roomName, string pass, string username)
@@ -196,10 +203,10 @@ public class NetworkManager : MonoBehaviour
     {
         try
         {
-            //if(ip == "")
-            //{
-            //    return false;
-            //}
+            if(ip == "")
+            {
+                return false;
+            }
             M = new TcpClient(ip, 8888);  // Connects to server
         }
         catch

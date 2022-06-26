@@ -16,6 +16,7 @@ public class GameManager : MonoBehaviour
     bool isReadyC = false;
     bool isReadyS = false;
     bool gameStarted = false;
+    bool gameEnded = false;
 
     public Dictionary<int, GameObject> Players;
 
@@ -74,26 +75,25 @@ public class GameManager : MonoBehaviour
     {
         if (s.isLoaded)
         {
-            if (!gameStarted)
+            if (!gameStarted && !gameEnded)
             {
                 gameStarted = true;
                 SceneManager.SetActiveScene(s);
                 GameObject.Find("TF1").GetComponentInChildren<MoveToNewFloor>().Open();
 
-                GameObject P1 = Instantiate(Player1Prefab, new Vector3(5f, -2.55f, 0f), Quaternion.identity);
-                Players.Add(0, P1);
-
-
                 Debug.Log("Instantiated players");
                 if (NetworkManager.instance.isServer.Value)
                 {
-                    Players[0].AddComponent<PlayerController>();
-                    Players[0].GetComponent<PlayerController>().Initialize(BulletPrefab);
+                    GameObject P1 = Instantiate(Player1Prefab, new Vector3(5f, -2.55f, 0f), Quaternion.identity);
+                    Players.Add(NetworkManager.instance.myId, P1);
+                    Players[NetworkManager.instance.myId].AddComponent<PlayerController>();
+                    Players[NetworkManager.instance.myId].GetComponent<PlayerController>().Initialize(BulletPrefab);
 
                     int[] ids = new int[ServerHost.clients.Keys.Count];
                     ServerHost.clients.Keys.CopyTo(ids, 0);
                     foreach (int i in ids)
                     {
+                        Debug.Log("next id is: " + i);
                         GameObject P2 = Instantiate(Player2Prefab, new Vector3(7f, -2.55f, 0f), Quaternion.identity);
                         Players.Add(i, P2);
                         Players[i].AddComponent<PlayerServerController>();
@@ -103,20 +103,20 @@ public class GameManager : MonoBehaviour
                 }
                 else if (!NetworkManager.instance.isServer.Value)
                 {
+                    GameObject P1 = Instantiate(Player1Prefab, new Vector3(5f, -2.55f, 0f), Quaternion.identity);
+                    Players.Add(0, P1);
                     GameObject P2 = Instantiate(Player2Prefab, new Vector3(7f, -2.55f, 0f), Quaternion.identity);
-                    Players.Add(1, P2);
-                    Players[1].AddComponent<PlayerServerController>();
-                    Players[1].GetComponent<PlayerServerController>().Initialize(BulletPrefab);
+                    Players.Add(NetworkManager.instance.myId, P2);
                     Players[0].AddComponent<PlayerServerController>();
                     Players[0].GetComponent<PlayerServerController>().Initialize(BulletPrefab);
 
-                    Players[1].AddComponent<PlayerController>();
-                    Players[1].GetComponent<PlayerController>().Initialize(BulletPrefab);
+                    Players[NetworkManager.instance.myId].AddComponent<PlayerController>();
+                    Players[NetworkManager.instance.myId].GetComponent<PlayerController>().Initialize(BulletPrefab);
                 }
             }
             if (NetworkManager.instance.isServer.Value)
             {
-                cam.transform.position = new Vector3(Players[0].transform.position.x, Players[0].transform.position.y, -1);
+                cam.transform.position = new Vector3(Players[NetworkManager.instance.myId].transform.position.x, Players[NetworkManager.instance.myId].transform.position.y, -1);
                 if(currentFloor > 0 && f != null && CurrentEnemies.Count == 0)
                 {
                     f.SpawnNextWave();
@@ -150,6 +150,8 @@ public class GameManager : MonoBehaviour
     }
     private void startGame()
     {
+        gameEnded = false;
+        UIManager.instance.DisableTitleScreen();
         DontDestroyOnLoad(this);
         DontDestroyOnLoad(cam);
         s = SceneManager.LoadScene("Ground Floor", new LoadSceneParameters(LoadSceneMode.Single));
@@ -229,7 +231,6 @@ public class GameManager : MonoBehaviour
         currentFloor++;
         if(currentFloor == 1)
         {
-            DontDestroyOnLoad(Players[0]);
             foreach(int PID in Players.Keys)
             {
                 DontDestroyOnLoad(Players[PID]);
@@ -279,7 +280,7 @@ public class GameManager : MonoBehaviour
         }
         else if(playerDead != id)
         {
-            //Send lose
+            Lose();
         }
     }
     public void RevivePlayer()
@@ -304,6 +305,7 @@ public class GameManager : MonoBehaviour
     }
     public void Win()
     {
+        gameEnded = true;
         int[] ids = new int[Players.Keys.Count];
         Players.Keys.CopyTo(ids, 0);
         Debug.Log("You Win");
@@ -318,7 +320,15 @@ public class GameManager : MonoBehaviour
         }
         Players = new Dictionary<int, GameObject>();
         SceneManager.LoadScene("Title Screen After Game", new LoadSceneParameters(LoadSceneMode.Single));
-        UIManager.instance.LoadTitleScreen();
+        UIManager.instance.EnableTitleScreen();
+        Players.Clear();
+        isReadyC = false;
+        isReadyS = false;
+        nextID = 0;
+        currentFloor = 0;
+        CurrentItem = null;
+        CurrentEnemies.Clear();
+        gameStarted = false;
     }
     public void Lose()
     {
@@ -333,5 +343,6 @@ public class GameManager : MonoBehaviour
         }
         Players = new Dictionary<int, GameObject>();
         SceneManager.LoadScene("Title Screen After Game", new LoadSceneParameters(LoadSceneMode.Single));
+        UIManager.instance.EnableTitleScreen();
     }
 }

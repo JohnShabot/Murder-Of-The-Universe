@@ -44,6 +44,11 @@ public class PlayerController : MonoBehaviour
         SDead = Sprite.Create(Texture2D.whiteTexture, new Rect(0, 0, 0, 0), new Vector2(0, 0));
     }
 
+    public void SetIDOnList(int id)
+    {
+
+    }
+
     void Update()
     {    
         movement();
@@ -138,7 +143,7 @@ public class PlayerController : MonoBehaviour
                 Item it = c.gameObject.GetComponent<ItemPickup>().GetItem();
                 if (NetworkManager.instance.isServer.Value)
                 {
-                    ServerSend.addItem(NetworkManager.instance.myId, GameManager.instance.getItemID(it));
+                    ServerSend.addItem(GameManager.instance.getItemID(it));
                     GameManager.instance.f.setItemTaken(true);
                 }
                 else if (!NetworkManager.instance.isServer.Value)

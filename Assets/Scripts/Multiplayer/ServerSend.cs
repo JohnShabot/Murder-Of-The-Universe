@@ -153,13 +153,12 @@ public class ServerSend
             SendUDPDataToAll(_packet);
         }
     }
-    public static void addItem(int PID, int IID)
+    public static void addItem(int IID)
     {
         using (Packet _packet = new Packet((int)ServerPackets.addItem))
         {
-            _packet.Write(PID);
             _packet.Write(IID);
-            SendTCPDataToAll(PID, _packet);
+            SendTCPDataToAll(_packet);
         }
     }
     public static void bossKilled(string bossKilled)

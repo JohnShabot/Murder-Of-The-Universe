@@ -70,7 +70,7 @@ public class ClientHandle
     }
     public static void addItem(Packet packet)
     {
-        GameObject p = GameManager.instance.Players[packet.ReadInt()];
+        GameObject p = GameManager.instance.Players[0];
         p.GetComponent<PlayerServerController>().AddItem(GameManager.instance.ItemTypes[packet.ReadInt()]);
     }
     public static void bossKilled(Packet packet)

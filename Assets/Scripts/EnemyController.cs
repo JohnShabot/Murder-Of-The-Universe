@@ -44,8 +44,8 @@ public class EnemyController : MonoBehaviour
         try
         {
             Rigidbody2D body = this.GetComponent<Rigidbody2D>();
-            float minD = Vector2.Distance(transform.position, GameManager.instance.Players[0].transform.position);
-            int id = 0;
+            float minD = Vector2.Distance(transform.position, GameManager.instance.Players[NetworkManager.instance.myId].transform.position);
+            int id = NetworkManager.instance.myId;
             foreach (int i in GameManager.instance.Players.Keys)
             {
                 float d = Vector2.Distance(transform.position, GameManager.instance.Players[i].transform.position);
@@ -123,7 +123,7 @@ public class EnemyController : MonoBehaviour
         }
         if (collision.collider.tag == "Player" && InvFrame >= 100)
         {
-            if (collision.gameObject.Equals(GameManager.instance.Players[0]))
+            if (collision.gameObject.Equals(GameManager.instance.Players[NetworkManager.instance.myId]))
                 collision.gameObject.GetComponent<PlayerController>().damage(EStats[1]);
             else
             {

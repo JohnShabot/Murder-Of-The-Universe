@@ -69,12 +69,11 @@ def client_connection(c, c_address):
                     print("An Error Occurred "+str(type(exc)) + str(exc))
                     c.send(("An Error Occurred "+str(type(exc)) + str(exc)).encode())
             elif data[0] == "WIN" and logged_in:
-                try:
-                    win(data[1])
-                    c.send("Accepted".encode())
-                except Exception as exc:
-                    print("An Error Occurred " + str(type(exc)) + str(exc))
-                    c.send(("An Error Occurred " + str(type(exc)) + str(exc)).encode())
+                win(data[1])
+                c.send("Accepted".encode())
+
+                # print("An Error Occurred " + str(type(exc)) + str(exc))
+                # c.send(("An Error Occurred " + str(type(exc)) + str(exc)).encode())
             elif data[0] == 'CLOSE':
                 print("ima")
                 close(c, pid)
@@ -96,8 +95,7 @@ def login(name, password, c):
 
         c.send(str(data[0][1]).encode())
         players_connected.append(data[0][1])
-        # a = random.randint(1000, 10000)
-        a = 1
+        a = random.randint(1000, 10000)
         msg = EmailMessage()
         message = "Thank you for choosing to play Murder Of The Universe!\nThe security code is " + str(a)
         msg.set_content(message)
@@ -105,7 +103,7 @@ def login(name, password, c):
         msg['Subject'] = "Your Security Code For Logging Into Murder Of The Universe"
         msg['From'] = "MurderOfTheUniverse@outlook.com"
         msg['To'] = email
-        # emailServer.send_message(msg)
+        emailServer.send_message(msg)
         print(players_connected)
         return tuple((a, data[0][1]))
     else:
@@ -212,7 +210,7 @@ conn = sqlite3.connect("Murder Of The Universe.db", check_same_thread=False)
 crsr = conn.cursor()
 emailServer = smtplib.SMTP(host="smtp.office365.com", port=587)
 emailServer.starttls()
-emailServer.login("MurderOfTheUniverse@outlook.com","Murd3r0fTh3Un1v3rs3")
+emailServer.login("MurderOfTheUniverse@outlook.com", "Murd3r0fTh3Un1v3rs3")
 main = threading.Thread(target=start_server)
 main.start()
 

@@ -274,7 +274,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Name - P2
+  m_Text: Waiting...
 --- !u!222 &17556721
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -3815,7 +3815,9 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Name - P1
+  m_Text: 'Waiting...
+
+'
 --- !u!222 &820457921
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -3967,15 +3969,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80191998f7875854f97acc840e3972f2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  screens:
-  - {fileID: 1523755432}
-  - {fileID: 977551512}
-  - {fileID: 1155463637}
-  - {fileID: 957486792}
-  - {fileID: 983476384}
-  - {fileID: 2066319133}
-  - {fileID: 2020975618}
-  - {fileID: 165181788}
+  screens: {fileID: 609455146}
   LabelTemplate: {fileID: 3741778920706563928, guid: 0b6e6523494d0c34dbffae145b69981a,
     type: 3}
   RoomsSection: {fileID: 978110899}

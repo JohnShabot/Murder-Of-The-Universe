@@ -30,6 +30,12 @@ public class ServerHost
         Debug.Log(clients[newID]);
     }
 
+    public static void closeCon()
+    {
+        tcpListener.Stop();
+        tcpListener = null;
+    }
+
     public static void Start(int _max, int _port)
     {
         port = _port;

@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class UIManager : MonoBehaviour
 {
     public static UIManager instance;
-    public Canvas[] screens;
+    public GameObject screens;
     public GameObject LabelTemplate;
     public GameObject RoomsSection;
     public GameObject passwordPanel;
@@ -27,7 +27,7 @@ public class UIManager : MonoBehaviour
     private void Start()
     {
         passwordPanel.SetActive(false);
-        foreach (Canvas s in screens)
+        foreach (Canvas s in screens.GetComponentsInChildren<Canvas>())
         {
             if (s.name == "Title Screen") s.enabled = true;
             else s.enabled = false;
@@ -59,7 +59,7 @@ public class UIManager : MonoBehaviour
     }
     public void ChangeScreen(string changeTo)
     {
-        foreach(Canvas s in screens)
+        foreach(Canvas s in screens.GetComponentsInChildren<Canvas>())
         {
             if (s.name == changeTo) s.enabled = true;
             else s.enabled = false;
@@ -74,11 +74,11 @@ public class UIManager : MonoBehaviour
 
     public void HostActivation()
     {
-        Canvas createRoom = screens[6];
+        Canvas createRoom = screens.GetComponentsInChildren<Canvas>()[6];
         InputField name;
         InputField pass;
 
-        foreach (Canvas s in screens)
+        foreach (Canvas s in screens.GetComponentsInChildren<Canvas>())
         {
             if (s.name == "Room Create Screen") createRoom = s;
         }
@@ -137,6 +137,7 @@ public class UIManager : MonoBehaviour
             }
         }
     }
+
     public void GetPassword(string name)
     {
         currRoom = name;
@@ -154,7 +155,7 @@ public class UIManager : MonoBehaviour
 
     public void Register()
     {
-        Canvas RegisterScreen = screens[3];
+        Canvas RegisterScreen = screens.GetComponentsInChildren<Canvas>()[3];
 
         InputField[] texts = RegisterScreen.GetComponentsInChildren<InputField>();
         GameObject lbl = GameObject.Find("Invalid Details SU");
@@ -175,7 +176,7 @@ public class UIManager : MonoBehaviour
     }
     public void Login()
     {
-        Canvas LoginScreen = screens[2];
+        Canvas LoginScreen = screens.GetComponentsInChildren<Canvas>()[2];
         InputField[] texts = LoginScreen.GetComponentsInChildren<InputField>();
         GameObject lbl = GameObject.Find("Invalid Details LI");
         bool s = NetworkManager.instance.Login(texts[0].text, texts[1].text);
@@ -193,9 +194,10 @@ public class UIManager : MonoBehaviour
         }
 
     }
+
     public void ConnectToMain()
     {
-        Canvas LoginScreen = screens[0];
+        Canvas LoginScreen = screens.GetComponentsInChildren<Canvas>()[0];
         InputField IPField = LoginScreen.GetComponentInChildren<InputField>();
         GameObject lbl = GameObject.Find("Invalid Details IP");
         bool s = NetworkManager.instance.ConnectToMain(IPField.text);
@@ -214,7 +216,7 @@ public class UIManager : MonoBehaviour
     }
     public void verify()
     {
-        Canvas verifyRoom = screens[4];
+        Canvas verifyRoom = screens.GetComponentsInChildren<Canvas>()[4];
         InputField text = verifyRoom.GetComponentInChildren<InputField>();
         GameObject lbl = GameObject.Find("Invalid Details 2FA");
         int s = NetworkManager.instance.Verify(text.text);
@@ -234,17 +236,22 @@ public class UIManager : MonoBehaviour
             Btn.SetActive(false);
         }
     }
-    public void LoadTitleScreen()
+
+    public void DisableTitleScreen()
     {
-        screens = FindObjectsOfType<Canvas>();
-        passwordPanel = GameObject.Find("Password Input");
-        RoomsSection = GameObject.Find("Rooms");
+        GameObject readyButton = GameObject.Find("Ready Button");
+        readyButton.GetComponent<Button>().enabled = true;
+        ChangeP1Name("Waiting...");
+        ChangeP2Name("Waiting...");
+        Debug.Log("Disabling Title Screen");
         passwordPanel.SetActive(false);
-        foreach (Canvas s in screens)
-        {
-            if (s.name == "Title Screen") s.enabled = true;
-            else s.enabled = false;
-        }
-        roomLabels = new List<GameObject>();
+        DontDestroyOnLoad(screens);
+        screens.SetActive(false);
+
+    }
+    public void EnableTitleScreen()
+    {
+        screens.SetActive(true);
+        ChangeScreen("Title Screen");
     }
 }
